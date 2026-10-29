@@ -1,6 +1,6 @@
 # 진행 기록
 
-**15단계 진행 중:** Bearer 인증·GPT 요청 제한·Render 설정을 준비했습니다. 실제 배포 URL 검증 전이며 완료로 표시하지 않습니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
+**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. Firebase/GPT/접근 토큰 환경설정과 인증된 요청 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
 
 현재 상태: **10~12단계 완료 — 코디세이 중계 서버를 통한 OpenAI GPT 호출, 실제 답변 내용 검증·자동 저장·목록·상세 복원 성공**.
 2026-10-29 `codyssey-chat-20261029-01`에서 Chat Completions 1회 성공. `/responses`는 호출하지 않았습니다.
@@ -1170,3 +1170,14 @@ OpenAI 실패 보고서·1회 시도 방지 파일, Gemini 보고서·시도 방
 - UI 실제 확인: 안내 블록 0개, 기존 질문 답변 표시·새로고침 동일 복원·새 질문 초기화·삭제 버튼 유지, 콘솔 오류 0건. `.local/verification-15/ui-result.json`, `question-pc-1482.jpg`. 뷰포트 요청은 적용되지 않아 이번 모바일 재검수는 미확인(과거 완료 검사와 구분).
 - `.local/verification-15/preservation-after.json`: 데이터128건 및 기존 질문3건 목록 응답 해시 작업 전후 일치. 실제 DB 변경과 GPT 호출0회.
 - Render 로그인 후 My Workspace에 기존 서비스0건 확인. GitHub 연결 승인 화면에서 사용자가 과제 저장소만 선택하여 승인하는 단계. 실제 서비스 생성·비밀값 설정·배포 URL 검증은 미실행이며 15단계는 미완료.
+
+
+### Render 연결 후 실제 배포 확인 — 2026-10-29
+
+- 사용자가 GitHub 연결을 완료한 뒤 이미 생성된 Free/Singapore 서비스 `srv-dbhdk7afngtc73bck570`을 발견하여 재사용했습니다. 중복 서비스를 생성하지 않았습니다.
+- 공개 백엔드 https://gajimaiso-ai-assistant.onrender.com 및 Swagger https://gajimaiso-ai-assistant.onrender.com/docs 확인. health/docs/openapi HTTP200, 실제 Swagger 제목·Authorize·보호 경로 보안 표시 확인.
+- 초기 data/summary는 503 `database_unavailable`, 보호 요청은 403 `access_not_configured`: 비밀값 미설정 상태를 안전하게 차단하며 연결 성공으로 표시하지 않음.
+- 실제 서비스의 자동 배포를 Off로 변경하고 시작 명령에 `--workers 1 --no-access-log`, 헬스체크 `/health` 설정. 공개 환경변수9개 저장 후 재빌드 `dep-dbhdmlafngtc73bcq80g` Live 확인. 배포 로그에서 해당 시작 명령 확인.
+- 로컬 `.env` 기존 바이트를 보존하고 접근 인증 전용 APP_ACCESS_TOKEN을 추가 준비. Render의 서비스 계정 JSON·코디세이 키·같은 접근 토큰은 사용자 직접 입력 대기. 실제 키 값을 출력·커밋하지 않음.
+- 이번 연결 후 작업의 실제 AI 호출0회, 실제 DB 쓰기0회. 사용자 로컬 서버 종료·재시작 없음. 전체 테스트 반복 실행 없음. 기존 원본 보존 결과 유지.
+- 근거: `.local/verification-15/render-public-check.json`, `render-swagger.jpg`, `render-secret-form.jpg`, `access-token-setup.json`. 공개 URL의 서버 실행과 외부 서비스 연결 완료는 구분하며 15단계 미완료 유지. 16단계는 시작하지 않음.

@@ -1,6 +1,12 @@
 # 15단계 Render 배포 설정
 
-상태: 로컬 보안 구현·검증 완료. 실제 Render 배포 및 공개 URL 검증은 아직 완료하지 않았습니다.
+상태: Render Free 서비스 배포·공개 HTTPS 서버·Swagger 확인 완료. Firebase 자격증명과 API 접근 토큰·코디세이 키 설정 및 인증된 실제 조회는 남아 있어 15단계는 미완료입니다.
+
+- 백엔드: https://gajimaiso-ai-assistant.onrender.com
+- Swagger: https://gajimaiso-ai-assistant.onrender.com/docs
+- 서비스: `srv-dbhdk7afngtc73bck570`, Singapore, Free
+- 배포 소스: `e4b2382`, 재빌드 `dep-dbhdmlafngtc73bcq80g` 성공
+- 최초 공개 검사: health/docs/openapi 200, data/summary 503 database_unavailable, 보호 API 403 access_not_configured. 보호 해제 없이 설정 대기 중입니다.
 2026-10-29 사용자가 코디세이 키의 외부 배포 사용이 허용됨을 확인했습니다.
 해당 확인은 사용자 제공 정보이며 별도의 공개 이용약관을 확인한 것으로 기록하지 않습니다.
 
@@ -64,3 +70,16 @@ Windows 키 경로는 Render에서 사용할 수 없습니다. JSON 환경변수
 5. 서버·Swagger·접근 보호 검증이 끝나야 15단계 완료로 변경합니다.
 
 [Render Free](https://render.com/docs/free)는 미사용 시 서버가 중지될 수 있어 첫 요청이 지연됩니다. 다음 프론트 연동에서 서버 연결 중 안내가 필요하며, GPT 자동 반복 전송으로 지연을 처리하지 않습니다.
+
+
+## 현재 사용자 입력 대기 항목
+
+Render의 기존 서비스 **Environment → Edit**에서 아래 3개 값만 직접 입력합니다. 항목 이름은 이미 준비했습니다.
+
+1. `FIREBASE_SERVICE_ACCOUNT_JSON`: 기존 서비스 계정 JSON 파일 전체 내용.
+2. `OPENAI_API_KEY`: 로컬 `backend/.env`의 기존 코디세이 키 값(변수명·등호·값을 감싼 따옴표 제외).
+3. `APP_ACCESS_TOKEN`: 이번 배포 인증용으로 로컬 `backend/.env` 맨 아래에 준비한 값. 기존 Firebase/OpenAI 설정의 원래 바이트를 변경하지 않고 추가했습니다. 실제 AI 키 신규 발급이 아닙니다.
+
+값을 입력한 뒤 **Choose an option → Save, rebuild, and deploy**를 선택합니다. 이 메뉴 항목은 선택 즉시 저장·재배포하므로 입력을 모두 마친 후 누릅니다. 키는 채팅·문서·GitHub로 전달하지 않습니다.
+
+공개 환경변수 9개는 저장했습니다. 아직 비밀값 3개가 비어 있으므로 실제 Firebase/GPT 연결 성공으로 기록하지 않습니다. 현행 원격 서버에 대한 인증된 요청·자료128건 조회·선택적 GPT 1회 검증이 남아 있습니다.

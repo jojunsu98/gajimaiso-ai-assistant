@@ -1,6 +1,6 @@
 # 가지마이소창원 AI 비서
 
-**15단계 진행 중:** Bearer 인증·GPT 요청 제한·Render 설정을 준비했습니다. 실제 배포 URL 검증 전이며 완료로 표시하지 않습니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
+**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. Firebase/GPT/접근 토큰 환경설정과 인증된 요청 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
 
 현재 과제는 **코디세이 중계 서버를 통한 OpenAI GPT 호출**을 사용합니다. 데이터 CRUD·요약, Chat Completions 기반 채팅, 대화 저장·목록·불러오기·삭제 API를 제공합니다.
 초기 오프라인 테스트 263개와 실제 Firestore+모의 AI의 격리 검증은 통과했습니다.
@@ -744,3 +744,14 @@ Vercel 배포는 후속 작업입니다. 공개 `API_BASE_URL` 빌드 설정으�
 - [비공개 GitHub 저장소](https://github.com/jojunsu98/gajimaiso-ai-assistant)에 초기 커밋 `1c78ea2` 업로드 및 원격 일치를 확인했습니다. 추적·스테이징·전체 커밋 blob 검사에서 실제 비밀값 미검출. .env·키 TXT·.venv·.local·로그는 제외됩니다.
 - 원본 128건과 기존 질문 3건 목록 응답의 작업 전후 해시 일치. DB 쓰기·GPT 호출 없음. 기존 사용자 서버 유지.
 - [Render 실행·환경변수·인증 연동 안내](DEPLOY_RENDER.md). Render 로그인은 완료됐으나 GitHub 앱의 저장소 접근 승인 및 실제 서비스 환경변수 입력·배포 검증은 남아 있습니다. **15단계 미완료**입니다.
+
+
+### Render 연결 후 실제 배포 확인 — 2026-10-29
+
+- 사용자가 GitHub 연결을 완료한 뒤 이미 생성된 Free/Singapore 서비스 `srv-dbhdk7afngtc73bck570`을 발견하여 재사용했습니다. 중복 서비스를 생성하지 않았습니다.
+- 공개 백엔드 https://gajimaiso-ai-assistant.onrender.com 및 Swagger https://gajimaiso-ai-assistant.onrender.com/docs 확인. health/docs/openapi HTTP200, 실제 Swagger 제목·Authorize·보호 경로 보안 표시 확인.
+- 초기 data/summary는 503 `database_unavailable`, 보호 요청은 403 `access_not_configured`: 비밀값 미설정 상태를 안전하게 차단하며 연결 성공으로 표시하지 않음.
+- 실제 서비스의 자동 배포를 Off로 변경하고 시작 명령에 `--workers 1 --no-access-log`, 헬스체크 `/health` 설정. 공개 환경변수9개 저장 후 재빌드 `dep-dbhdmlafngtc73bcq80g` Live 확인. 배포 로그에서 해당 시작 명령 확인.
+- 로컬 `.env` 기존 바이트를 보존하고 접근 인증 전용 APP_ACCESS_TOKEN을 추가 준비. Render의 서비스 계정 JSON·코디세이 키·같은 접근 토큰은 사용자 직접 입력 대기. 실제 키 값을 출력·커밋하지 않음.
+- 이번 연결 후 작업의 실제 AI 호출0회, 실제 DB 쓰기0회. 사용자 로컬 서버 종료·재시작 없음. 전체 테스트 반복 실행 없음. 기존 원본 보존 결과 유지.
+- 근거: `.local/verification-15/render-public-check.json`, `render-swagger.jpg`, `render-secret-form.jpg`, `access-token-setup.json`. 공개 URL의 서버 실행과 외부 서비스 연결 완료는 구분하며 15단계 미완료 유지. 16단계는 시작하지 않음.
