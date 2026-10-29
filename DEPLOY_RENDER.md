@@ -5,7 +5,7 @@
 - 백엔드: https://gajimaiso-ai-assistant.onrender.com
 - Swagger: https://gajimaiso-ai-assistant.onrender.com/docs
 - 서비스: `srv-dbhdk7afngtc73bck570`, Singapore, Free
-- 배포 소스: `e4b2382`, 재빌드 `dep-dbhdmlafngtc73bcq80g` 성공
+- 현재 배포 소스: `b83e8d8`, 재빌드 `dep-dbhdt86c6qcc73f5eirg` 성공. 이전 `e4b2382` 재빌드 기록은 보존했습니다.
 - 최초 공개 검사: health/docs/openapi 200, data/summary 503 database_unavailable, 보호 API 403 access_not_configured. 보호 해제 없이 설정 대기 중입니다.
 2026-10-29 사용자가 코디세이 키의 외부 배포 사용이 허용됨을 확인했습니다.
 해당 확인은 사용자 제공 정보이며 별도의 공개 이용약관을 확인한 것으로 기록하지 않습니다.
@@ -82,4 +82,6 @@ Render의 기존 서비스 **Environment → Edit**에서 아래 3개 값만 직
 
 값을 입력한 뒤 **Choose an option → Save, rebuild, and deploy**를 선택합니다. 이 메뉴 항목은 선택 즉시 저장·재배포하므로 입력을 모두 마친 후 누릅니다. 키는 채팅·문서·GitHub로 전달하지 않습니다.
 
-공개 환경변수 9개는 저장했습니다. 아직 비밀값 3개가 비어 있으므로 실제 Firebase/GPT 연결 성공으로 기록하지 않습니다. 현행 원격 서버에 대한 인증된 요청·자료128건 조회·선택적 GPT 1회 검증이 남아 있습니다.
+공개 환경변수 9개는 저장했습니다. 2026-10-29 사용자 설정 완료 안내 후 새 읽기 화면에서 저장된 비밀값 3개를 검사했으나 모두 비어 있었습니다(값은 출력하지 않음). `/health`, `/docs`, `/openapi.json`은 200, `/api/data` 및 `/api/data/summary`는 503 `database_unavailable`, 로컬 접근 토큰을 사용한 `/api/conversations`는 403 `access_not_configured`였습니다. 이는 요청 토큰 불일치(401)가 아니라 서버 접근 토큰이 미설정·부적합한 경우이며, Render 화면에서는 빈 값으로 확인했습니다.
+
+이번 재검사의 실제 AI 호출·DB 쓰기는 0회입니다. 기존 로컬 서버의 읽기 요청으로 원본 128건과 기존 대화 목록 3건이 배포 전 응답 해시와 같은 것도 확인했습니다. 현행 원격 서버에 대한 인증된 요청·자료 128건 조회·선택적 GPT 1회 검증은 설정 입력 후에 수행합니다. 편집 화면에 실제 값을 입력한 뒤 저장·재배포해야 하며 항목 이름만 존재하는 상태는 설정 완료가 아닙니다.

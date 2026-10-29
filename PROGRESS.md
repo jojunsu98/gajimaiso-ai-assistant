@@ -1,6 +1,6 @@
 # 진행 기록
 
-**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. Firebase/GPT/접근 토큰 환경설정과 인증된 요청 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
+**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. 2026-10-29 사용자 설정 완료 안내 후 재검사했지만 Render에 저장된 Firebase JSON·코디세이 키·접근 토큰 값이 모두 비어 있었습니다. 데이터 조회 503, 보호 API 403으로 안전하게 차단되며 실제 배포 GPT 호출은 0회입니다. 비밀 환경변수 입력과 인증된 연결 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
 
 현재 상태: **10~12단계 완료 — 코디세이 중계 서버를 통한 OpenAI GPT 호출, 실제 답변 내용 검증·자동 저장·목록·상세 복원 성공**.
 2026-10-29 `codyssey-chat-20261029-01`에서 Chat Completions 1회 성공. `/responses`는 호출하지 않았습니다.
@@ -1181,3 +1181,13 @@ OpenAI 실패 보고서·1회 시도 방지 파일, Gemini 보고서·시도 방
 - 로컬 `.env` 기존 바이트를 보존하고 접근 인증 전용 APP_ACCESS_TOKEN을 추가 준비. Render의 서비스 계정 JSON·코디세이 키·같은 접근 토큰은 사용자 직접 입력 대기. 실제 키 값을 출력·커밋하지 않음.
 - 이번 연결 후 작업의 실제 AI 호출0회, 실제 DB 쓰기0회. 사용자 로컬 서버 종료·재시작 없음. 전체 테스트 반복 실행 없음. 기존 원본 보존 결과 유지.
 - 근거: `.local/verification-15/render-public-check.json`, `render-swagger.jpg`, `render-secret-form.jpg`, `access-token-setup.json`. 공개 URL의 서버 실행과 외부 서비스 연결 완료는 구분하며 15단계 미완료 유지. 16단계는 시작하지 않음.
+
+## 15단계 — 사용자 환경설정 완료 안내 후 재검사 (2026-10-29)
+
+- 새 배포 `dep-dbhdt86c6qcc73f5eirg` / 소스 `b83e8d8`: Render Live 확인.
+- HTTPS health/docs/openapi: HTTP 200. data/summary: 503 `database_unavailable`. 로컬 접근 토큰을 보낸 대화 목록: 403 `access_not_configured`.
+- 보호 API 8개에 무인증·잘못된 인증으로 보낸 16개 요청 모두 403 차단 확인. 쓰기 요청은 빈 본문·존재하지 않는 시험용 ID를 사용했으며 GPT 생성·DB 변경은 발생하지 않았습니다.
+- 별도로 연 Render 읽기 화면에서 실제 저장값을 비출력 방식으로 검사: Firebase JSON·코디세이 키·APP_ACCESS_TOKEN 모두 빈 값. 사용자에게 실제 value 입력 후 저장·재배포를 안내하고 편집 화면 준비.
+- 이번 확인의 GPT 생성 0회, DB 쓰기 0회. 기존 로컬 서버에 대한 읽기 요청으로 data 128건 및 대화 목록 3건의 응답 해시가 배포 전과 일치함을 확인. 기존 서버 재시작·종료 없음.
+- 코드 변경 없음. 앞서 통과한 테스트는 반복하지 않음. Render 인증 성공·Firestore 조회·GPT 검증은 설정 대기이며 15단계 미완료 유지.
+- 근거: `.local/verification-15/render-post-secrets-preflight.json`, `preservation-post-secret-handoff.json`, `render-empty-secret-fields-confirmed.jpg`.

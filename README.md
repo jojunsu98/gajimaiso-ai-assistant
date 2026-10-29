@@ -1,6 +1,6 @@
 # 가지마이소창원 AI 비서
 
-**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. Firebase/GPT/접근 토큰 환경설정과 인증된 요청 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
+**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. 2026-10-29 사용자 설정 완료 안내 후 재검사했지만 Render에 저장된 Firebase JSON·코디세이 키·접근 토큰 값이 모두 비어 있었습니다. 데이터 조회 503, 보호 API 403으로 안전하게 차단되며 실제 배포 GPT 호출은 0회입니다. 비밀 환경변수 입력과 인증된 연결 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
 
 현재 과제는 **코디세이 중계 서버를 통한 OpenAI GPT 호출**을 사용합니다. 데이터 CRUD·요약, Chat Completions 기반 채팅, 대화 저장·목록·불러오기·삭제 API를 제공합니다.
 초기 오프라인 테스트 263개와 실제 Firestore+모의 AI의 격리 검증은 통과했습니다.
