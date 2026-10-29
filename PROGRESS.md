@@ -1,6 +1,8 @@
 # 진행 기록
 
-**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. 2026-10-29 사용자 설정 완료 안내 후 재검사했지만 Render에 저장된 Firebase JSON·코디세이 키·접근 토큰 값이 모두 비어 있었습니다. 데이터 조회 503, 보호 API 403으로 안전하게 차단되며 실제 배포 GPT 호출은 0회입니다. 비밀 환경변수 입력과 인증된 연결 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
+**16단계 진행 중:** Vercel 운영 배포와 Render API·인증·CORS·원본 보존 검증 통과. Chrome 확장프로그램 창 차단 해제와 사용자 토큰 입력 후 실제 PC/모바일·질문 불러오기·콘솔 검증 대기. 17단계는 시작하지 않았습니다.
+
+**15단계 완료 (2026-10-29 21:54 KST):** 수정된 토큰으로 실제 Render API 인증 200, 무인증·오인증 401 차단, Firebase 원본 128건·요약 조회를 확인했습니다. 코디세이 GPT 실제 생성은 정확히 1회 성공했고 자동 저장·목록·상세 복원이 일치합니다. 원본 자료와 기존 질문 3건은 검증 전후 동일하며 검증 질문 1건만 추가돼 현재 질문은 4건입니다. 기존 서버·Swagger·CORS 검증은 재실행하지 않고 이전 근거를 유지했습니다. **16단계는 시작하지 않고 중단합니다.** [배포 안내](DEPLOY_RENDER.md) 및 마지막 최종 검증 기록을 참고하세요.
 
 현재 상태: **10~12단계 완료 — 코디세이 중계 서버를 통한 OpenAI GPT 호출, 실제 답변 내용 검증·자동 저장·목록·상세 복원 성공**.
 2026-10-29 `codyssey-chat-20261029-01`에서 Chat Completions 1회 성공. `/responses`는 호출하지 않았습니다.
@@ -1191,3 +1193,56 @@ OpenAI 실패 보고서·1회 시도 방지 파일, Gemini 보고서·시도 방
 - 이번 확인의 GPT 생성 0회, DB 쓰기 0회. 기존 로컬 서버에 대한 읽기 요청으로 data 128건 및 대화 목록 3건의 응답 해시가 배포 전과 일치함을 확인. 기존 서버 재시작·종료 없음.
 - 코드 변경 없음. 앞서 통과한 테스트는 반복하지 않음. Render 인증 성공·Firestore 조회·GPT 검증은 설정 대기이며 15단계 미완료 유지.
 - 근거: `.local/verification-15/render-post-secrets-preflight.json`, `preservation-post-secret-handoff.json`, `render-empty-secret-fields-confirmed.jpg`.
+
+## 15단계 — 저장된 환경변수 적용 재검사 (2026-10-29 21:40~21:43 KST)
+
+- 새 배포 `dep-dbhjpum1egvs73foiuf0` / 소스 `075ba79010ff57ca662e8ff24ece9e537dcd4c04`: Render `Deploy succeeded | Live`. 대시보드 배포 시각 21:32:58, 실제 기동 완료 로그 21:33:58. worker 1·접근 로그 비활성화 시작 명령 확인.
+- 저장값은 비공개로 검사했습니다. Firebase JSON은 서비스 계정 JSON 형식이며 실제 자료·요약 조회 모두 200입니다. 원본 128건, 2016-01~2026-08, 기존 자료 응답 해시 일치. 이전의 빈 값/503 상태는 해소됐습니다.
+- `APP_ACCESS_TOKEN`은 값이 있고 ASCII 32자 이상이지만 앞뒤 공백/줄바꿈이 있습니다. 내부 공백은 없으며 앞뒤 공백을 제거하면 형식 조건을 충족합니다. 무인증·로컬 토큰 인증 요청 모두 403 `access_not_configured`로, 서버 설정 부적합 상태입니다. 토큰 값은 출력하지 않았고 변경하지 않았습니다.
+- `OPENAI_API_KEY`는 저장돼 있고 공백·변수명 접두사는 없습니다. 보호 API 사전 검사에서 중단했으므로 실제 AI 인증·생성은 아직 미검증입니다. GPT POST 0회, DB 쓰기 0회. 기존 질문 3건의 원격 조회·상세 보존 검증도 인증 복구 후 진행합니다.
+- health/docs/openapi 200 및 실제 Swagger 보호 경로 표시 확인. CORS 허용 origin은 200/Authorization 허용, 비허용 origin은 400/allow-origin 없음.
+- 이번 검증 스크립트 종료코드 1은 접근 토큰 설정 미통과를 나타냅니다. 기존 전체 테스트·로컬 서버 시작/종료·GitHub 업로드·Render 설정 변경은 하지 않았습니다. 원격 설정 편집 화면은 취소했고 비밀값은 모두 다시 숨겼습니다.
+- 근거: `.local/verification-15/render-resume-20261029T124024584167Z-9a0888d9-report.json`, `render-resume-20261029T124243495373Z-84f07743-diagnostics.json`, `render-resume-environment-state.json`.
+- 다음 단계: 사용자가 Render `APP_ACCESS_TOKEN` 앞뒤 공백/줄바꿈만 제거하고 저장·재배포한 뒤, 인증 401/200·기존 질문 보존·승인된 GPT 최대 1회와 저장/복원을 검증합니다. 15단계 미완료이며 16단계는 시작하지 않았습니다.
+
+## 15단계 최종 검증 완료 — 2026-10-29 21:54 KST
+
+사용자가 접근 토큰 앞뒤 줄바꿈을 수정하고 Save, rebuild, and deploy 및 Live를 확인한 후, 남은 실제 Render API 검증만 수행했습니다. 이전 실패 기록은 당시 상태로 보존합니다.
+
+| 검증 항목 | 이번 실제 결과 |
+| --- | --- |
+| 접근 인증 | 로컬 기존 토큰으로 원격 대화 목록·상세 HTTP 200. 무인증·잘못된 토큰은 각각 401 access_denied |
+| Firebase 자료·요약 | 모두 HTTP 200. 128건, 2016-01~2026-08. 기존 배포 전 자료·질문 목록 응답 해시와 일치 |
+| 코디세이 GPT | POST /api/chat 정확히 1회, HTTP 200. gpt-5.4-mini, 입력 716 / 출력 160토큰. 자동 재시도 0회 |
+| 답변 내용 | 최신 2026-08/-813명, 최근 12개월 평균 -558명, 직전 -551.42명 및 기간이 서버 요약과 일치. 순유출·전체 인구 증감의 구분과 원인/정책효과 해석 한계 명시 |
+| 자동 저장·복원 | saved=true. 새 질문이 목록에 정확히 1회 표시. 상세의 질문·답변·요약·모델·사용량이 생성 응답과 일치 |
+| 기존 자료 보존 | 원본 128건·요약·기존 질문 3건 목록과 전체 상세(생성/수정시각 포함)의 검증 전후 해시 일치 |
+| 추가 기록 | 검증 질문 1건만 추가, 현재 질문 총 4건. 기존 기록 수정·삭제 없음 |
+| 실행 결과 | 검증 스크립트 종료코드 0. 비밀값 출력 없음. GPT 재호출 방지 marker 유지 |
+
+검증 질문 ID: `34766710-ca74-465f-b0e0-f92fbc58e8d2`, 제목 접두사 `[Render 연결 검증]`.
+
+실행 근거:
+
+- [최종 검증 결과](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-report.json)
+- [GPT 답변과 대조 요약](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-reply.json)
+- [검증 전 자료·질문](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-before.json)
+- [검증 후 자료·질문](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-after.json)
+
+기존 health/docs/OpenAPI·실제 Swagger·CORS 및 오프라인 테스트 통과 근거는 이전 실행에서 상속했으며 이번에 반복하지 않았습니다. 새로운 배포 ID·대시보드 Live 확인은 이번 자동 검증에 포함하지 않았고 사용자 확인과 구분합니다. 환경변수·앱 소스·로컬 서버·배포 설정 변경, 커밋·푸시는 수행하지 않았습니다.
+
+**15단계 완료. 16단계 및 프론트 배포/인증 연동으로 자동 진행하지 않고 여기서 종료합니다.**
+
+## 16단계 Vercel 프론트 배포 — 진행 중 (2026-10-29)
+
+- 운영 URL: https://gajimaiso-ai-assistant.vercel.app
+- Vercel 프로젝트 `prj_NW1ATS6Jm07fhPH0gAR50fwtAN2d`, production 배포 `dpl_6JoehLe9QE1S2FYRAchGBaUdC4eH` READY. 기존 프로젝트 검색 결과 없음 확인 후 생성했습니다.
+- GitHub 배포 커밋 `e715972274f17ea37c47a7e54d2ee2b921c21f86`: 비공개 기존 저장소의 main에 필요한 7개 파일만 업로드. 저장소 공개 범위 변경 없음.
+- Framework Other(null), Root frontend, Build node build.mjs, Output dist, 별도 의존성 설치 없음. API_BASE_URL 공개 설정을 빌드에서 config.js로 생성하며 기본/허용 주소는 기존 Render HTTPS origin입니다. 정적 브라우저가 서버 환경변수를 읽는 방식이 아닙니다.
+- 배포 파일은 index.html/styles.css/app.js/api.js/config.js 5개뿐입니다. 서비스 계정·GPT 키·접근 토큰·로컬 검증 파일은 포함하지 않습니다. 미추적 backend/backend.env도 명시적으로 Git에서 제외했습니다.
+- 접근 토큰은 사용자가 password 입력란에 입력하며 현재 탭의 함수 메모리에만 유지합니다. 연결 시 입력란을 비우고, 연결 해제·새로고침 시 다시 입력해야 합니다. URL·로그·오류·localStorage·sessionStorage·공개 환경변수에 저장하지 않습니다. HTTPS Authorization 헤더로 보호 요청에만 전송하며 리디렉션을 거부합니다.
+- **인증 한계:** 이 토큰은 공유된 단일 관리 권한입니다. 공개 다중 사용자 로그인·사용자별 권한·개별 기록 격리가 아니며, 토큰을 가진 사람은 같은 질문 기록과 자료 변경 기능에 접근합니다. 불특정 사용자에게 배포하지 말아야 합니다. 공개 자료 조회와 보호 기능 접근은 구분됩니다.
+- Render ALLOWED_ORIGINS에는 기존 로컬 출처 2개를 보존하고 정확히 https://gajimaiso-ai-assistant.vercel.app 하나만 추가했습니다. 와일드카드와 임의 Preview 도메인은 허용하지 않았습니다.
+- 이번 관련 검증: 빌드 5파일·JS 모듈 구문·신규 인증 전달 4항목 통과. 실제 운영 파일 모두200/비밀값 미검출, Render 자료·요약·질문 목록200, 기존 128건/질문4건 전체 상세 보존, 무인증·오인증401, CORS 운영출처200/미허용출처400. GPT 생성0회·DB 쓰기0회. 이전 전체 테스트는 반복하지 않았습니다.
+- 남은 필수 검증: Chrome 확장프로그램 UI가 자동화를 차단해 사용자의 닫기 및 토큰 입력 대기. 실제 PC·모바일 레이아웃·기존 질문 UI 불러오기·최종 콘솔 검증은 아직 완료로 표시하지 않습니다.
+- 근거: `.local/verification-15/stage16-read-verification.json`. 17단계 종합 테스트는 시작하지 않았습니다.

@@ -1,11 +1,11 @@
 # 15단계 Render 배포 설정
 
-상태: Render Free 서비스 배포·공개 HTTPS 서버·Swagger 확인 완료. Firebase 자격증명과 API 접근 토큰·코디세이 키 설정 및 인증된 실제 조회는 남아 있어 15단계는 미완료입니다.
+상태: **15단계 완료 (2026-10-29 21:54 KST).** 사용자가 토큰 공백을 수정하고 재배포한 뒤 실제 인증 200·무인증/오인증 401, 원본 128건·요약 조회, 코디세이 GPT 1회 생성·자동 저장·목록·상세 복원을 확인했습니다. 원본과 기존 질문 3건은 보존했고 검증 질문 1건만 추가됐습니다. 아래 미완료·공백 수정 안내는 이전 상태 기록입니다. 추가 설정 입력은 필요하지 않습니다. 16단계는 시작하지 않습니다.
 
 - 백엔드: https://gajimaiso-ai-assistant.onrender.com
 - Swagger: https://gajimaiso-ai-assistant.onrender.com/docs
 - 서비스: `srv-dbhdk7afngtc73bck570`, Singapore, Free
-- 현재 배포 소스: `b83e8d8`, 재빌드 `dep-dbhdt86c6qcc73f5eirg` 성공. 이전 `e4b2382` 재빌드 기록은 보존했습니다.
+- 이전 대시보드 확인 배포: 소스 `075ba79`, `dep-dbhjpum1egvs73foiuf0`, 2026-10-29 21:33:58 KST 기동 완료. 이후 토큰 수정·재배포·Live는 사용자가 확인했으며 이번에는 남은 실제 API 검증만 수행했습니다. 새 배포 ID를 대시보드에서 다시 조회하지 않았습니다.
 - 최초 공개 검사: health/docs/openapi 200, data/summary 503 database_unavailable, 보호 API 403 access_not_configured. 보호 해제 없이 설정 대기 중입니다.
 2026-10-29 사용자가 코디세이 키의 외부 배포 사용이 허용됨을 확인했습니다.
 해당 확인은 사용자 제공 정보이며 별도의 공개 이용약관을 확인한 것으로 기록하지 않습니다.
@@ -72,7 +72,7 @@ Windows 키 경로는 Render에서 사용할 수 없습니다. JSON 환경변수
 [Render Free](https://render.com/docs/free)는 미사용 시 서버가 중지될 수 있어 첫 요청이 지연됩니다. 다음 프론트 연동에서 서버 연결 중 안내가 필요하며, GPT 자동 반복 전송으로 지연을 처리하지 않습니다.
 
 
-## 현재 사용자 입력 대기 항목
+## 이전 사용자 입력 대기 기록
 
 Render의 기존 서비스 **Environment → Edit**에서 아래 3개 값만 직접 입력합니다. 항목 이름은 이미 준비했습니다.
 
@@ -85,3 +85,13 @@ Render의 기존 서비스 **Environment → Edit**에서 아래 3개 값만 직
 공개 환경변수 9개는 저장했습니다. 2026-10-29 사용자 설정 완료 안내 후 새 읽기 화면에서 저장된 비밀값 3개를 검사했으나 모두 비어 있었습니다(값은 출력하지 않음). `/health`, `/docs`, `/openapi.json`은 200, `/api/data` 및 `/api/data/summary`는 503 `database_unavailable`, 로컬 접근 토큰을 사용한 `/api/conversations`는 403 `access_not_configured`였습니다. 이는 요청 토큰 불일치(401)가 아니라 서버 접근 토큰이 미설정·부적합한 경우이며, Render 화면에서는 빈 값으로 확인했습니다.
 
 이번 재검사의 실제 AI 호출·DB 쓰기는 0회입니다. 기존 로컬 서버의 읽기 요청으로 원본 128건과 기존 대화 목록 3건이 배포 전 응답 해시와 같은 것도 확인했습니다. 현행 원격 서버에 대한 인증된 요청·자료 128건 조회·선택적 GPT 1회 검증은 설정 입력 후에 수행합니다. 편집 화면에 실제 값을 입력한 뒤 저장·재배포해야 하며 항목 이름만 존재하는 상태는 설정 완료가 아닙니다.
+
+## 최신 확인 결과와 남은 항목 — 2026-10-29 21:43 KST
+
+- 위 빈 값 기록은 이전 배포 당시 상태입니다. 현재 3개 비밀값은 모두 저장돼 있습니다. 값 자체는 출력·문서화하지 않았습니다.
+- Firebase 서비스 계정 JSON 형식과 실제 `/api/data`, `/api/data/summary` HTTP 200을 확인했습니다. 자료 128건·2016-01~2026-08·기존 응답 해시 일치로 원본 보존을 확인했습니다.
+- `APP_ACCESS_TOKEN`은 앞뒤 공백/줄바꿈이 있고 내부 공백은 없습니다. 공백 제거 후 ASCII 32자 이상 조건을 충족합니다. 현재 서버는 이를 부적합한 설정으로 처리하며 무인증·로컬 토큰 인증 요청 모두 403 `access_not_configured`입니다.
+- `OPENAI_API_KEY`는 값이 저장돼 있고 공백/변수명 접두사가 없습니다. 접근 인증 사전 검사에서 중단했으므로 실제 AI 인증·생성 성공으로 해석하지 않습니다. 이번 GPT 요청·DB 쓰기는 0회입니다.
+- health/docs/openapi 200, 실제 Swagger 보호 경로 표시, CORS 허용/거부 동작을 확인했습니다. 원격 대화 목록·기존 질문 3건 보존·GPT 답변 저장/복원 검증은 남아 있습니다.
+- **사용자 처리:** 기존 서비스 Environment → Edit에서 `APP_ACCESS_TOKEN` 값 앞뒤의 공백·줄바꿈만 제거하고 **Save, rebuild, and deploy**를 실행합니다. 다른 두 비밀값은 다시 입력할 필요가 없습니다. 실제 토큰은 채팅에 보내지 않습니다.
+- 확인 근거: `.local/verification-15/render-resume-environment-state.json`, `render-resume-20261029T124024584167Z-9a0888d9-report.json`, `render-resume-20261029T124243495373Z-84f07743-diagnostics.json`. 기존 로컬 서버·배포 설정·비밀값을 이번에 변경하지 않았습니다.

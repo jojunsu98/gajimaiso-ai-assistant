@@ -1,6 +1,8 @@
 # 가지마이소창원 AI 비서
 
-**15단계 진행 중:** Render HTTPS 서버·Swagger 200 확인. 2026-10-29 사용자 설정 완료 안내 후 재검사했지만 Render에 저장된 Firebase JSON·코디세이 키·접근 토큰 값이 모두 비어 있었습니다. 데이터 조회 503, 보호 API 403으로 안전하게 차단되며 실제 배포 GPT 호출은 0회입니다. 비밀 환경변수 입력과 인증된 연결 검증이 남아 미완료입니다. [Render 배포 설정과 인증 인터페이스](DEPLOY_RENDER.md)를 참고하세요.
+**16단계 진행 중:** [Vercel 운영 화면](https://gajimaiso-ai-assistant.vercel.app) 배포와 Render API·인증·CORS·원본 보존 검증은 통과했습니다. Chrome 확장프로그램 창 차단 해제 및 사용자 토큰 입력 후 실제 PC/모바일·질문 불러오기·콘솔 검증이 남아 있어 아직 완료가 아닙니다. Vercel 환경변수는 공개 `API_BASE_URL` 하나임을 확인했습니다. 상세 결과는 마지막 16단계 기록을 참고하세요.
+
+**15단계 완료 (2026-10-29 21:54 KST):** 수정된 토큰으로 실제 Render API 인증 200, 무인증·오인증 401 차단, Firebase 원본 128건·요약 조회를 확인했습니다. 코디세이 GPT 실제 생성은 정확히 1회 성공했고 자동 저장·목록·상세 복원이 일치합니다. 원본 자료와 기존 질문 3건은 검증 전후 동일하며 검증 질문 1건만 추가돼 현재 질문은 4건입니다. 기존 서버·Swagger·CORS 검증은 재실행하지 않고 이전 근거를 유지했습니다. **16단계는 시작하지 않고 중단합니다.** [배포 안내](DEPLOY_RENDER.md) 및 아래 최종 검증 기록을 참고하세요.
 
 현재 과제는 **코디세이 중계 서버를 통한 OpenAI GPT 호출**을 사용합니다. 데이터 CRUD·요약, Chat Completions 기반 채팅, 대화 저장·목록·불러오기·삭제 API를 제공합니다.
 초기 오프라인 테스트 263개와 실제 Firestore+모의 AI의 격리 검증은 통과했습니다.
@@ -755,3 +757,45 @@ Vercel 배포는 후속 작업입니다. 공개 `API_BASE_URL` 빌드 설정으�
 - 로컬 `.env` 기존 바이트를 보존하고 접근 인증 전용 APP_ACCESS_TOKEN을 추가 준비. Render의 서비스 계정 JSON·코디세이 키·같은 접근 토큰은 사용자 직접 입력 대기. 실제 키 값을 출력·커밋하지 않음.
 - 이번 연결 후 작업의 실제 AI 호출0회, 실제 DB 쓰기0회. 사용자 로컬 서버 종료·재시작 없음. 전체 테스트 반복 실행 없음. 기존 원본 보존 결과 유지.
 - 근거: `.local/verification-15/render-public-check.json`, `render-swagger.jpg`, `render-secret-form.jpg`, `access-token-setup.json`. 공개 URL의 서버 실행과 외부 서비스 연결 완료는 구분하며 15단계 미완료 유지. 16단계는 시작하지 않음.
+
+## 15단계 최종 검증 완료 — 2026-10-29 21:54 KST
+
+사용자가 접근 토큰 앞뒤 줄바꿈을 수정하고 Save, rebuild, and deploy 및 Live를 확인한 후, 남은 실제 Render API 검증만 수행했습니다. 이전 실패 기록은 당시 상태로 보존합니다.
+
+| 검증 항목 | 이번 실제 결과 |
+| --- | --- |
+| 접근 인증 | 로컬 기존 토큰으로 원격 대화 목록·상세 HTTP 200. 무인증·잘못된 토큰은 각각 401 access_denied |
+| Firebase 자료·요약 | 모두 HTTP 200. 128건, 2016-01~2026-08. 기존 배포 전 자료·질문 목록 응답 해시와 일치 |
+| 코디세이 GPT | POST /api/chat 정확히 1회, HTTP 200. gpt-5.4-mini, 입력 716 / 출력 160토큰. 자동 재시도 0회 |
+| 답변 내용 | 최신 2026-08/-813명, 최근 12개월 평균 -558명, 직전 -551.42명 및 기간이 서버 요약과 일치. 순유출·전체 인구 증감의 구분과 원인/정책효과 해석 한계 명시 |
+| 자동 저장·복원 | saved=true. 새 질문이 목록에 정확히 1회 표시. 상세의 질문·답변·요약·모델·사용량이 생성 응답과 일치 |
+| 기존 자료 보존 | 원본 128건·요약·기존 질문 3건 목록과 전체 상세(생성/수정시각 포함)의 검증 전후 해시 일치 |
+| 추가 기록 | 검증 질문 1건만 추가, 현재 질문 총 4건. 기존 기록 수정·삭제 없음 |
+| 실행 결과 | 검증 스크립트 종료코드 0. 비밀값 출력 없음. GPT 재호출 방지 marker 유지 |
+
+검증 질문 ID: `34766710-ca74-465f-b0e0-f92fbc58e8d2`, 제목 접두사 `[Render 연결 검증]`.
+
+실행 근거:
+
+- [최종 검증 결과](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-report.json)
+- [GPT 답변과 대조 요약](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-reply.json)
+- [검증 전 자료·질문](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-before.json)
+- [검증 후 자료·질문](.local/verification-15/render-resume-20261029T125347566349Z-54c196ba-after.json)
+
+기존 health/docs/OpenAPI·실제 Swagger·CORS 및 오프라인 테스트 통과 근거는 이전 실행에서 상속했으며 이번에 반복하지 않았습니다. 새로운 배포 ID·대시보드 Live 확인은 이번 자동 검증에 포함하지 않았고 사용자 확인과 구분합니다. 환경변수·앱 소스·로컬 서버·배포 설정 변경, 커밋·푸시는 수행하지 않았습니다.
+
+**15단계 완료. 16단계 및 프론트 배포/인증 연동으로 자동 진행하지 않고 여기서 종료합니다.**
+
+## 16단계 Vercel 프론트 배포 — 진행 중 (2026-10-29)
+
+- 운영 URL: https://gajimaiso-ai-assistant.vercel.app
+- Vercel 프로젝트 `prj_NW1ATS6Jm07fhPH0gAR50fwtAN2d`, production 배포 `dpl_6JoehLe9QE1S2FYRAchGBaUdC4eH` READY. 기존 프로젝트 검색 결과 없음 확인 후 생성했습니다.
+- GitHub 배포 커밋 `e715972274f17ea37c47a7e54d2ee2b921c21f86`: 비공개 기존 저장소의 main에 필요한 7개 파일만 업로드. 저장소 공개 범위 변경 없음.
+- Framework Other(null), Root frontend, Build node build.mjs, Output dist, 별도 의존성 설치 없음. API_BASE_URL 공개 설정을 빌드에서 config.js로 생성하며 기본/허용 주소는 기존 Render HTTPS origin입니다. 정적 브라우저가 서버 환경변수를 읽는 방식이 아닙니다.
+- 배포 파일은 index.html/styles.css/app.js/api.js/config.js 5개뿐입니다. 서비스 계정·GPT 키·접근 토큰·로컬 검증 파일은 포함하지 않습니다. 미추적 backend/backend.env도 명시적으로 Git에서 제외했습니다.
+- 접근 토큰은 사용자가 password 입력란에 입력하며 현재 탭의 함수 메모리에만 유지합니다. 연결 시 입력란을 비우고, 연결 해제·새로고침 시 다시 입력해야 합니다. URL·로그·오류·localStorage·sessionStorage·공개 환경변수에 저장하지 않습니다. HTTPS Authorization 헤더로 보호 요청에만 전송하며 리디렉션을 거부합니다.
+- **인증 한계:** 이 토큰은 공유된 단일 관리 권한입니다. 공개 다중 사용자 로그인·사용자별 권한·개별 기록 격리가 아니며, 토큰을 가진 사람은 같은 질문 기록과 자료 변경 기능에 접근합니다. 불특정 사용자에게 배포하지 말아야 합니다. 공개 자료 조회와 보호 기능 접근은 구분됩니다.
+- Render ALLOWED_ORIGINS에는 기존 로컬 출처 2개를 보존하고 정확히 https://gajimaiso-ai-assistant.vercel.app 하나만 추가했습니다. 와일드카드와 임의 Preview 도메인은 허용하지 않았습니다.
+- 이번 관련 검증: 빌드 5파일·JS 모듈 구문·신규 인증 전달 4항목 통과. 실제 운영 파일 모두200/비밀값 미검출, Render 자료·요약·질문 목록200, 기존 128건/질문4건 전체 상세 보존, 무인증·오인증401, CORS 운영출처200/미허용출처400. GPT 생성0회·DB 쓰기0회. 이전 전체 테스트는 반복하지 않았습니다.
+- 남은 필수 검증: Chrome 확장프로그램 UI가 자동화를 차단해 사용자의 닫기 및 토큰 입력 대기. 실제 PC·모바일 레이아웃·기존 질문 UI 불러오기·최종 콘솔 검증은 아직 완료로 표시하지 않습니다.
+- 근거: `.local/verification-15/stage16-read-verification.json`. 17단계 종합 테스트는 시작하지 않았습니다.
