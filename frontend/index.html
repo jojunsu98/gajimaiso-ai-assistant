@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="저장된 창원시 월별 순이동 자료를 살펴보고 AI에게 질문하는 개인 데이터 비서">
+  <title>가지마이소창원 AI 비서</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#chat-question">질문 입력으로 바로 가기</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="#top" aria-label="가지마이소 처음으로"><span>가지마이소 <small>AI 비서</small></span></a>
+      <nav aria-label="주요 영역"><a href="#chat-section">질문하기</a><a href="#data-section">데이터 관리</a></nav>
+      <span id="connection-status" class="connection-status" role="status">자료 확인 중</span>
+    </div>
+  </header>
+  <main id="top" class="page-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">CHANGWON · POPULATION MOVEMENT</p>
+      <h1 id="page-title">창원 인구이동 현황을 한눈에</h1>
+      <p class="intro-copy">창원시의 월별 인구이동 추이를 확인하고, 궁금한 점은 AI에게 질문해보세요.</p>
+    </section>
+
+    <section class="summary-card" aria-labelledby="summary-heading">
+      <div class="section-heading"><div><p class="eyebrow">DATA OVERVIEW</p><h2 id="summary-heading">저장 데이터 요약</h2></div><button id="summary-refresh" class="button button-quiet" type="button">요약 새로고침 <span aria-hidden="true">↻</span></button></div>
+      <div id="summary-state" class="notice" role="status">현재 저장 자료를 불러오고 있습니다.</div>
+      <div id="summary-content" hidden>
+        <div class="summary-context"><span id="summary-period"></span><span id="summary-count" class="pill"></span><span id="summary-latest"></span></div>
+        <dl class="stats-grid">
+          <div class="stat"><dt>전체 기간 월평균 순이동</dt><dd id="summary-average">—</dd><span>저장된 전체 월 기준</span></div>
+          <div class="stat"><dt>최근 12개월 월평균</dt><dd id="summary-recent">—</dd><span id="summary-recent-period"></span></div>
+          <div class="stat"><dt>직전 12개월 월평균</dt><dd id="summary-previous">—</dd><span id="summary-previous-period"></span></div>
+          <div class="stat stat-accent"><dt>두 평균의 차이</dt><dd id="summary-difference">—</dd><span>최근 평균 − 직전 평균</span></div>
+        </dl>
+        <p id="summary-trend" class="trend-copy"></p>
+        <p id="summary-quality" class="helper-text" hidden></p>
+      </div>
+      <div class="summary-notes"><span>월별 순이동은 전입−전출이며 전체 인구 증감과 다름</span><span>최신 저장 월 기준 분석</span></div>
+    </section>
+
+    <section id="chat-section" class="chat-section" aria-labelledby="chat-heading">
+      <div class="section-heading outside-heading"><div><p class="eyebrow">ASK AI</p><h2 id="chat-heading">AI에게 질문하기</h2></div><p class="helper-text">답변은 정상 저장이 확인된 뒤 표시됩니다.</p></div>
+      <div class="chat-workspace">
+        <aside class="conversation-sidebar" aria-label="이전 질문">
+          <button id="new-conversation" class="button button-primary new-chat" type="button"><span aria-hidden="true">＋</span> 새 질문</button>
+          <details id="conversation-panel" open>
+            <summary>이전 질문 <span id="conversation-count" class="small-count"></span></summary>
+            <div class="conversation-tools"><span>최근 수정 순</span><button id="conversations-refresh" class="text-button" type="button">목록 새로고침</button></div>
+            <p id="conversation-list-state" class="notice compact" role="status">질문 목록을 불러오고 있습니다.</p>
+            <ul id="conversation-list" class="conversation-list"></ul>
+            <button id="delete-conversation" class="button button-danger conversation-delete" type="button" hidden>질문 삭제</button>
+          </details>
+          <p class="sidebar-note">이전 질문 불러오기는 AI를 다시 호출하지 않습니다.</p>
+        </aside>
+        <div class="chat-panel">
+          <div id="messages" class="messages" aria-label="질문과 답변" aria-live="polite" aria-relevant="additions text">
+            <div class="welcome-message"><h3>무엇이 궁금한가요?</h3><p>월별 변화부터 전체 기간의 최댓값까지.<br>질문을 보내면 AI가 저장된 자료 요약을 읽습니다.</p><div class="example-questions"><button class="example-question" type="button" data-example="저장된 기간에서 월별 순이동 최댓값과 최솟값, 각각의 월을 알려주고 이 수치의 의미를 설명해줘.">최댓값과 최솟값을 살펴볼까요? <span aria-hidden="true">↗</span></button><button class="example-question" type="button" data-example="최신 저장 월 기준으로 최근 12개월과 직전 12개월의 월평균 순이동을 비교해줘. 전체 인구 증감이나 이동 원인까지 이 자료로 확정할 수 있는지도 알려줘.">최근 두 기간의 평균을 비교해요 <span aria-hidden="true">↗</span></button></div><p class="example-hint">예시를 누르면 입력칸만 채워집니다.</p></div>
+          </div>
+          <div id="chat-feedback" class="notice chat-feedback" role="status" hidden></div>
+          <form id="chat-form" class="chat-composer">
+            <label for="chat-question">질문하기</label>
+            <textarea id="chat-question" name="message" rows="3" placeholder="궁금한 내용을 입력하세요." aria-describedby="chat-input-help chat-character-count"></textarea>
+            <div class="composer-footer"><div><span id="chat-input-help" class="helper-text">Enter 전송 · Shift+Enter 줄바꿈</span><span id="chat-character-count" class="character-count">0 / 2,000자</span></div><button id="send-question" class="button button-primary" type="submit" disabled><span id="send-label">보내기</span><span aria-hidden="true">↑</span></button></div>
+          </form>
+          <p class="chat-footnote">답변은 참고 자료입니다. 원인·정책 효과는 이 자료만으로 확정할 수 없습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="data-section" class="data-section" aria-labelledby="data-heading">
+      <div class="section-heading outside-heading"><div><p class="eyebrow">MANAGE RECORDS</p><h2 id="data-heading">월별 데이터 관리</h2></div><button id="data-refresh" class="button button-quiet" type="button">자료 새로고침 <span aria-hidden="true">↻</span></button></div>
+      <p class="data-warning">여기서 추가·수정·삭제하면 실제 저장 자료와 AI 분석 결과가 바뀝니다. 기존 원본 기록도 변경되므로 대상을 확인하세요.</p>
+      <div class="data-workspace">
+        <form id="data-form" class="data-form" novalidate>
+          <div class="form-heading"><h3 id="data-form-title">월별 기록 추가</h3><span id="data-form-mode" class="pill">새 기록</span></div>
+          <label for="data-month">월 <span class="required-label">필수</span></label>
+          <input id="data-month" name="month" type="month" min="0001-01" max="9999-12" required aria-describedby="data-month-help">
+          <p id="data-month-help" class="helper-text">YYYY-MM · 저장 시 월 대표일 01을 사용합니다.</p>
+          <label for="data-value">순이동자수 <span class="required-label">명 · 정수</span></label>
+          <input id="data-value" name="value" type="text" inputmode="text" placeholder="음수와 0도 입력할 수 있습니다" required autocomplete="off" aria-describedby="data-value-help">
+          <p id="data-value-help" class="helper-text">소수·쉼표 없이 입력하세요. 값을 반올림하지 않습니다.</p>
+          <label for="data-memo">메모 <span class="required-label">최대 500자</span></label>
+          <textarea id="data-memo" name="memo" rows="3" placeholder="자료에 대한 메모를 남겨보세요"></textarea>
+          <div id="data-feedback" class="notice" role="status" hidden></div>
+          <div class="form-actions"><button id="data-submit" class="button button-primary" type="submit">기록 추가</button><button id="data-cancel" class="button button-quiet" type="button" hidden>수정 취소</button></div>
+        </form>
+        <div class="data-list-panel"><div class="table-heading"><h3>저장 자료 <span id="data-count" class="small-count"></span></h3><span class="helper-text">최신 월부터</span></div><div id="data-list-state" class="notice" role="status">자료 목록을 불러오고 있습니다.</div><div class="table-scroll"><table id="data-table"><caption class="sr-only">월별 순이동 데이터. 각 행에서 기록을 수정하거나 삭제할 수 있습니다.</caption><thead><tr><th scope="col">월</th><th scope="col" class="number-cell">순이동 (명)</th><th scope="col">메모</th><th scope="col">관리</th></tr></thead><tbody id="data-rows"></tbody></table></div></div>
+      </div>
+    </section>
+    <footer class="site-footer"><span>가지마이소 AI 비서</span><p>월별 자료의 01은 대표일이며, 하루치 관측값이 아닙니다.</p></footer>
+  </main>
+  <noscript><p class="notice">이 화면을 사용하려면 브라우저의 JavaScript를 활성화해 주세요.</p></noscript>
+</body>
+</html>

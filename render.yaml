@@ -1,0 +1,36 @@
+# Secrets are entered by the user in Render, never committed here.
+services:
+  - type: web
+    name: gajimaiso-ai-assistant
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --no-access-log
+    healthCheckPath: /health
+    autoDeployTrigger: off
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.10
+      - key: WEB_CONCURRENCY
+        value: "1"
+      - key: FIREBASE_PROJECT_ID
+        sync: false
+      - key: FIREBASE_SERVICE_ACCOUNT_JSON
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: OPENAI_BASE_URL
+        value: https://copa.codyssey.kr/v1
+      - key: OPENAI_MODEL
+        value: gpt-5.4-mini
+      - key: AI_PROVIDER
+        value: openai
+      - key: OPENAI_MAX_OUTPUT_TOKENS
+        value: "800"
+      - key: OPENAI_TIMEOUT_SECONDS
+        value: "45"
+      - key: ALLOWED_ORIGINS
+        value: http://localhost:5500,http://127.0.0.1:5500
+      - key: APP_ACCESS_TOKEN
+        sync: false

@@ -1,0 +1,32 @@
+# Project-local Python environment and caches
+.venv/
+__pycache__/
+*.py[cod]
+
+# Local environment settings; examples may be tracked
+.env
+.env.*
+!.env.example
+!.env.sample
+
+# User-provided local OpenAI key file
+/backend/OPENAI_API_KEY.txt
+/backend/코디세이 OPENAI_API_KEY.txt
+*API_KEY*.txt
+*api_key*.txt
+
+# Defense in depth; keep real keys outside this project and OneDrive
+/backend/secrets/
+/secrets/
+
+# Common Firebase service-account key filenames, at any depth
+serviceAccountKey.json
+service-account-key.json
+service_account_key.json
+firebase-service-account.json
+firebase-service-account-key.json
+*-firebase-adminsdk-*.json
+
+# Local server logs and execution evidence
+/.local/
+*.log
