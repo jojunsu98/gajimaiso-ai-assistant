@@ -734,3 +734,13 @@ Vercel 배포는 후속 작업입니다. 공개 `API_BASE_URL` 빌드 설정으�
 근거: [사용자 확인과 API 기록](.local/verification-13-14/ui-integration/manual-confirmation.json), [이번47개 검사](.local/verification-13-14/ui-integration/frontend-tests.json), [실제 화면 결과](.local/verification-13-14/ui-integration/browser-results.json), [원본/참고 파일 보존](.local/verification-13-14/ui-integration/preservation.json).
 
 배포 전에는 공개 접근의 인증/권한 보호, 배포 환경의 비밀 설정·정확한 CORS/프론트 API 주소 및 코디세이 키 사용 조건을 확인하고 배포 후 검증해야 합니다. 이 작업에서는 Render·Vercel 배포, GitHub 푸시, 신규 기능 개발을 하지 않았습니다.
+
+
+## 15단계 보안·배포 준비 및 추가 UI 수정
+
+- `QUESTION / 새 질문 / 질문을 보내면 현재 저장 자료로 답변합니다.` 상단 안내 블록을 제거했습니다. 질문 삭제 버튼은 이전 질문 목록 아래에 유지합니다.
+- 기존 질문 불러오기·새로고침 복원·새 질문 전환을 실제 브라우저에서 확인했습니다. 추가 GPT 호출은 0회입니다. 이번 PC 캡처는 실제 폭 1482px이며, 화면 크기 도구가 적용되지 않아 모바일 재검수는 하지 못했습니다. 기존 13~14단계 모바일 검수 기록과 구분합니다.
+- 인증·요청 제한 및 관련 API 모의 테스트 80개, 프론트 테스트 47개 통과. 새 로컬 서버 HTTP 검증 통과 후 해당 프로세스만 종료했습니다.
+- [비공개 GitHub 저장소](https://github.com/jojunsu98/gajimaiso-ai-assistant)에 초기 커밋 `1c78ea2` 업로드 및 원격 일치를 확인했습니다. 추적·스테이징·전체 커밋 blob 검사에서 실제 비밀값 미검출. .env·키 TXT·.venv·.local·로그는 제외됩니다.
+- 원본 128건과 기존 질문 3건 목록 응답의 작업 전후 해시 일치. DB 쓰기·GPT 호출 없음. 기존 사용자 서버 유지.
+- [Render 실행·환경변수·인증 연동 안내](DEPLOY_RENDER.md). Render 로그인은 완료됐으나 GitHub 앱의 저장소 접근 승인 및 실제 서비스 환경변수 입력·배포 검증은 남아 있습니다. **15단계 미완료**입니다.
