@@ -10,3 +10,9 @@
 @media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
 
 .conversation-delete{margin-top:12px}
+
+/* Access controls reuse the existing palette and buttons. */
+.access-panel { margin: 24px 0; padding: 20px; border: 1px solid #d6dfda; border-radius: 5px; background: #fff; }
+#access-form { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+#access-token { flex: 1; min-width: 160px; max-width: 400px; padding: 10px; border: 1px solid #d6dfda; border-radius: 4px; font: inherit; }
+@media (max-width: 600px) { #access-form label { width: 100%; } #access-token { width: 100%; max-width: none; flex-basis: 100%; box-sizing: border-box; } }

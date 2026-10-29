@@ -1,5 +1,5 @@
 // One request per action: no retries and no alternate provider or API address.
-export const TIMEOUTS = Object.freeze({ read: 15000, write: 25000, chat: 75000 });
+export const TIMEOUTS = Object.freeze({ read: 65000, write: 25000, chat: 75000 });
 
 export class ApiError extends Error {
   constructor(code, status = null) {
@@ -10,7 +10,7 @@ export class ApiError extends Error {
   }
 }
 
-export function createApiClient(baseUrl, fetchImpl = globalThis.fetch, timeouts = TIMEOUTS) {
+export function createApiClient(baseUrl, fetchImpl = globalThis.fetch, timeouts = TIMEOUTS, getAccessToken = () => "") {
   const base = new URL(baseUrl);
   if (!['http:', 'https:'].includes(base.protocol) || base.username || base.password
       || base.search || base.hash || base.pathname !== '/') {
@@ -19,6 +19,12 @@ export function createApiClient(baseUrl, fetchImpl = globalThis.fetch, timeouts 
   return async function request(path, { method = "GET", body, kind = "read" } = {}) {
     if (!path.startsWith("/api/") || path.includes("?") || path.includes("#")
         || !Object.hasOwn(timeouts, kind)) throw new ApiError("invalid_api_configuration");
+    const protectedRequest = method !== "GET" || path.startsWith("/api/conversations");
+    const token = protectedRequest ? getAccessToken() : "";
+    if (protectedRequest && !token) throw new ApiError("access_required");
+    const headers = { Accept: "application/json" };
+    if (body !== undefined) headers["Content-Type"] = "application/json";
+    if (token) headers.Authorization = `Bearer ${token}`;
     const controller = new AbortController();
     let timedOut = false;
     const timer = setTimeout(() => { timedOut = true; controller.abort(); }, timeouts[kind]);
@@ -28,8 +34,8 @@ export function createApiClient(baseUrl, fetchImpl = globalThis.fetch, timeouts 
         signal: controller.signal,
         credentials: "omit",
         cache: "no-store",
-        headers: body === undefined ? { Accept: "application/json" }
-          : { Accept: "application/json", "Content-Type": "application/json" },
+        redirect: "error",
+        headers,
         ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       });
       if (response.status === 204 && response.ok) return null;

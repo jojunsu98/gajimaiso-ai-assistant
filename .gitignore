@@ -29,4 +29,8 @@ firebase-service-account-key.json
 
 # Local server logs and execution evidence
 /.local/
+/frontend/dist/
+/.vercel/
+/frontend/.vercel/
+/backend/backend.env
 *.log

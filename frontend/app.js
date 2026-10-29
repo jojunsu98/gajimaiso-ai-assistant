@@ -35,6 +35,9 @@ export function formatNumber(value) {
 }
 
 const ERROR_MESSAGES = Object.freeze({
+  access_required: "접근 토큰을 먼저 연결하세요.",
+  access_denied: "접근 토큰이 유효하지 않습니다. 토큰을 확인하고 다시 연결하세요.",
+  access_not_configured: "서버의 접근 인증 설정을 확인해야 합니다.",
   duplicate_month: "같은 월의 기록이 이미 있습니다. 목록에서 해당 월을 확인하세요.",
   validation_error: "입력 형식이나 길이가 올바르지 않습니다. 월·정수·메모 또는 질문을 확인하세요.",
   data_not_found: "대상 월별 기록이 없습니다. 자료 목록을 새로고침하세요.",
@@ -109,8 +112,10 @@ const periodText = (period) => period?.start && period?.end ? `${period.start} ~
 
 export function startApp() {
   const byId = (id) => document.getElementById(id);
+  let accessToken = "";
+  let accessPending = false;
   let api;
-  try { api = createApiClient(API_BASE_URL); } catch (error) {
+  try { api = createApiClient(API_BASE_URL, globalThis.fetch, undefined, () => accessToken); } catch (error) {
     byId("connection-status").textContent = "연결 설정 확인 필요";
     ["summary-state", "conversation-list-state", "data-list-state"].forEach((id) => {
       byId(id).textContent = safeErrorMessage(error);
@@ -160,12 +165,15 @@ export function startApp() {
   function updateControls() {
     const question = byId("chat-question").value.trim();
     const length = codePointLength(question);
-    const locked = state.chatPending || state.conversationBusy;
+    const locked = state.chatPending || state.conversationBusy || accessPending;
+    byId("access-connect").disabled = locked || state.dataBusy;
+    byId("access-token").disabled = locked || state.dataBusy;
+    byId("access-clear").disabled = locked || state.dataBusy || !accessToken;
     byId("new-conversation").disabled = locked;
     byId("conversations-refresh").disabled = locked || state.conversationsLoading;
     byId("delete-conversation").disabled = locked || state.conversationLoading;
     byId("chat-question").disabled = state.chatPending;
-    byId("send-question").disabled = locked || state.conversationLoading || state.dataBusy || state.composing || length < 1 || length > 2000;
+    byId("send-question").disabled = !accessToken || locked || state.conversationLoading || state.dataBusy || state.composing || length < 1 || length > 2000;
     byId("send-label").textContent = state.chatPending ? "답변 대기 중" : "보내기";
     byId("chat-form").setAttribute("aria-busy", String(state.chatPending));
     byId("chat-character-count").textContent = `${formatNumber(length)} / 2,000자`;
@@ -174,7 +182,7 @@ export function startApp() {
     document.querySelectorAll(".conversation-button, .example-question").forEach((button) => { button.disabled = locked; });
     byId("summary-refresh").disabled = state.summaryLoading;
     byId("data-refresh").disabled = state.dataLoading || state.dataBusy;
-    const dataLocked = state.dataBusy || state.chatPending;
+    const dataLocked = !accessToken || accessPending || state.dataBusy || state.chatPending;
     ["data-value", "data-memo", "data-submit", "data-cancel"].forEach((id) => { byId(id).disabled = dataLocked; });
     byId("data-month").disabled = dataLocked || Boolean(state.editingRecord);
     byId("data-submit").textContent = state.dataBusy ? "처리 중…" : state.editingRecord ? "수정 저장" : "기록 추가";
@@ -245,6 +253,10 @@ export function startApp() {
     updateControls();
   }
   async function loadConversations() {
+    if (!accessToken) {
+      notice("conversation-list-state", "접근 토큰을 연결하면 이전 질문을 불러올 수 있습니다.");
+      return false;
+    }
     const version = ++state.listVersion;
     state.conversationsLoading = true;
     notice("conversation-list-state", "이전 질문 목록을 불러오고 있습니다.");
@@ -542,6 +554,41 @@ export function startApp() {
     if (button.dataset.action === "edit") editRecord(record);
     else if (button.dataset.action === "delete") deleteRecord(record);
   });
+  function disconnectAccess() {
+    accessToken = "";
+    byId("access-token").value = "";
+    state.listVersion++;
+    state.conversationsLoading = false;
+    state.conversations = [];
+    byId("conversation-count").textContent = "";
+    newConversation();
+    notice("conversation-list-state", "접근 토큰을 연결하면 이전 질문을 불러올 수 있습니다.");
+    notice("access-status", "연결을 해제했습니다. 토큰과 불러온 질문을 화면에서 지웠습니다.");
+    updateControls();
+  }
+  byId("access-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (accessPending || state.chatPending || state.dataBusy || state.conversationBusy) return;
+    const candidate = byId("access-token").value.trim();
+    byId("access-token").value = "";
+    if (!/^[\x21-\x7e]{32,}$/.test(candidate)) {
+      notice("access-status", "공백 없는 영문·숫자·기호 32자 이상의 접근 토큰을 입력하세요.", "error");
+      return;
+    }
+    disconnectAccess();
+    accessToken = candidate;
+    accessPending = true;
+    updateControls();
+    notice("access-status", "접근 권한을 확인하고 있습니다. 서버가 쉬고 있었다면 잠시 걸릴 수 있습니다.");
+    const ok = await loadConversations();
+    accessPending = false;
+    if (ok) notice("access-status", "연결됐습니다. 이 탭에서 보호 기능을 사용할 수 있습니다.", "success");
+    else { disconnectAccess(); notice("access-status", "연결하지 못했습니다. 접근 토큰과 서버 상태를 확인하세요.", "error"); }
+    updateControls();
+  });
+  byId("access-clear").addEventListener("click", disconnectAccess);
+  window.addEventListener("pagehide", () => { accessToken = ""; byId("access-token").value = ""; });
+  window.addEventListener("pageshow", (event) => { if (event.persisted) window.location.reload(); });
   const selection = restoreSelection();
   updateControls();
   loadSummary();
