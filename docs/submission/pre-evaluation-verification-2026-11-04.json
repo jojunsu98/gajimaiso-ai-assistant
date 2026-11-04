@@ -8,7 +8,7 @@
     "openapi_operation_refs_match": true
   },
   "corrected_during_check": "Initial null-valued examples lost required fields in generated OpenAPI; replaced with complete synthetic examples and revalidated.",
-  "live_openapi_examples_verified": false,
+  "live_openapi_examples_verified": true,
   "gpt_calls": 0,
   "database_reads": 0,
   "database_writes": 0,
@@ -21,6 +21,31 @@
     "json_parses": true,
     "existing_evidence_hashes_match": 13,
     "changed_files_secret_scan_passed": true,
-    "git_diff_check_passed": true
+    "git_diff_check_passed": true,
+    "total_changed_files_since_submission_baseline": 11
+  },
+  "live_openapi_url": "https://gajimaiso-ai-assistant.onrender.com/openapi.json",
+  "live_openapi_http_status": 200,
+  "live_examples_match_local": {
+    "ChatRequest": true,
+    "ChatResponse": true,
+    "SummaryResponse": true
+  },
+  "deployed_backend_commit": "7a87f1f1cc7cc2c86c222754ed195e381fac6bcd",
+  "render_deploy_id": "dep-dblalegn74is739il2hg",
+  "render_status_observed": "Deploy succeeded|Live",
+  "render_duration": "1m 6s",
+  "render_deployment_method": "manual deploy latest commit; automatic deployment remains off",
+  "deployment_verified_at_utc": "2026-11-04T03:48:28.210020+00:00",
+  "github_public_commit_confirmed": "7a87f1f1cc7cc2c86c222754ed195e381fac6bcd",
+  "updated_readme_browser_check": {
+    "signed_out": true,
+    "new_evidence_section_visible": true,
+    "three_images_loaded": true
+  },
+  "deployment_screenshot": {
+    "path": "docs/submission/screenshots/09-openapi-deployed-2026-11-04.jpg",
+    "sha256": "f309aa35ce611b46d5c492519c8dd479a2d01de3c744eb88b0d57e2e15d636d5",
+    "visually_reviewed": true
   }
 }
