@@ -1,0 +1,20 @@
+{
+  "checked_date_kst": "2026-11-04",
+  "repository": "jojunsu98/gajimaiso-ai-assistant",
+  "branch": "main",
+  "evidence_commit_sha": "459908dbd2d1e611b6892d3e22e235c4b51197ce",
+  "local_and_github_api_main_matched": true,
+  "push_exit_code": 0,
+  "evidence_commit_changed_files": 31,
+  "visibility_at_check": "private",
+  "visibility_changed_by_agent": false,
+  "original_app_source_changed": false,
+  "content": "README, PROGRESS, deployment guide, submission docs, screenshots, selected verification evidence, evidence-only attributes",
+  "line_ending_review": {
+    "initial_exact_byte_check": "JSON hashes matched; CRLF was flagged by whitespace checker after -text attributes",
+    "fix": "Scoped cr-at-eol whitespace rule; preserve original evidence bytes",
+    "after_fix_commit_whitespace_check_exit_code": 0,
+    "evidence_hash_matches": 13
+  },
+  "actual_assignment_submission": false
+}

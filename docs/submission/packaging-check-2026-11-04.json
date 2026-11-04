@@ -24,5 +24,8 @@
     "8014": true
   },
   "published_status_reference": "CHECKLIST.md",
-  "submitted": false
+  "submitted": false,
+  "publication_evidence": "publication-verification-2026-11-04.json",
+  "published_evidence_hashes_verified": 13,
+  "git_combined_diff_check_exit_code": 0
 }
