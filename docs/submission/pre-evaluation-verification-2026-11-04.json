@@ -1,0 +1,26 @@
+{
+  "checked_at_utc": "2026-11-04T03:45:00.438389+00:00",
+  "scope": "pre-evaluation documentation and OpenAPI examples only",
+  "offline_checks": {
+    "network_blocked": true,
+    "three_generated_openapi_examples_validate": true,
+    "synthetic_summary_example_matches_calculation": true,
+    "openapi_operation_refs_match": true
+  },
+  "corrected_during_check": "Initial null-valued examples lost required fields in generated OpenAPI; replaced with complete synthetic examples and revalidated.",
+  "live_openapi_examples_verified": false,
+  "gpt_calls": 0,
+  "database_reads": 0,
+  "database_writes": 0,
+  "previous_full_tests_rerun": false,
+  "neato_reevaluation_run": false,
+  "remaining_neato_attempts_from_user_report": 1,
+  "packaging_checks": {
+    "changed_file_count": 10,
+    "relative_links_exist": true,
+    "json_parses": true,
+    "existing_evidence_hashes_match": 13,
+    "changed_files_secret_scan_passed": true,
+    "git_diff_check_passed": true
+  }
+}

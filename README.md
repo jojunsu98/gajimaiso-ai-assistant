@@ -5,8 +5,90 @@
 **2026-11-04 제출 준비 상태:** 공식 과제 원문 대조를 마쳤습니다. 필수 기능·검증 근거·필수 캡처3종·문서를 준비했습니다. 실제 과제 제출 접수는 사용자 확인 전까지 미완료입니다. [공식 요구사항 대조](docs/submission/OFFICIAL_REQUIREMENTS.md)를 참고하세요. 기능 검증은 2026-10-29 실제/격리/모의/사용자 확인 기록을 재사용했고, 새 GPT 호출과 운영 DB 쓰기는0회입니다. 캡처 확보를 위해 실제 Firestore 격리 기록1건을 추가하고 촬영 후 정리 삭제했습니다.
 
 - [웹 앱](https://gajimaiso-ai-assistant.vercel.app) · [백엔드 API 기본 주소](https://gajimaiso-ai-assistant.onrender.com) · [Swagger](https://gajimaiso-ai-assistant.onrender.com/docs)
-- [GitHub 비공개 저장소](https://github.com/jojunsu98/gajimaiso-ai-assistant)
+- [GitHub 공개 저장소](https://github.com/jojunsu98/gajimaiso-ai-assistant) · 제출 브랜치 `main`
 - [최종 제출 체크리스트](docs/submission/CHECKLIST.md) · [캡처3종과 설명](docs/submission/SCREENSHOTS.md) · [진행 이력](PROGRESS.md)
+
+**공개 접근 확인:** 2026-11-04 로그인·쿠키 없는 HTTP 요청으로 저장소·README·필수 이미지3종 모두200을 확인했고, 로그아웃 브라우저에서도 README 이미지3종이 정상 표시됐습니다. [접근 기록](docs/submission/public-access-2026-11-04.json).
+
+## 사전평가 보완: 실제 구현 근거
+
+네이토 2차 사전평가13/18의 실패 항목1·4·5·6·11과 통과 항목의 개선 의견을 대조했습니다. [18개 항목별 보완 문서](docs/submission/PRE_EVALUATION_RESPONSE.md)에 소스·기존 실행 기록·운영 한계를 연결했습니다. **보완 후 사전평가는 아직 재실행하지 않았으므로18/18 통과를 주장하지 않습니다.** 이미지가 평가 대상에서 제외되는 자동 평가에도 다음 코드와 Markdown 근거를 제공합니다.
+
+### 1. 배포 주소와 로컬 주소는 구분됩니다
+
+실제 프론트는 **https://gajimaiso-ai-assistant.vercel.app**, 백엔드는 **https://gajimaiso-ai-assistant.onrender.com**, Swagger는 **https://gajimaiso-ai-assistant.onrender.com/docs**입니다. [frontend/config.js](frontend/config.js)의 `http://127.0.0.1:8002`는 로컬 개발 기본값입니다. Vercel은 이 파일을 그대로 배포하지 않고 [build.mjs](frontend/build.mjs)로 운영 주소를 생성합니다.
+
+```javascript
+const api = new URL(globalThis.process?.env?.API_BASE_URL || 'https://gajimaiso-ai-assistant.onrender.com');
+await writeFile(new URL('config.js', output), `// Public API origin only; generated at build time.\nexport const API_BASE_URL = ${JSON.stringify(api.origin)};\n`);
+```
+
+위는 실제 빌드 코드 중 발췌입니다. 생략된 검증은 Render의 정확한 HTTPS origin만 허용합니다. [Vercel 설정](frontend/vercel.json)은 `buildCommand: node build.mjs`, `outputDirectory: dist`이며 배포된 [config.js](https://gajimaiso-ai-assistant.vercel.app/config.js)에서 공개 API 주소를 확인할 수 있습니다.
+
+### 2. 요약을 GPT 시스템 프롬프트에 주입합니다
+
+[ChatService.chat](backend/app/services/chat.py)의 실제 핵심 코드입니다. `/api/data/summary`와 **동일한 calculate_summary 함수**를 호출해 현재 DB 자료를 요약합니다. 자기 서버에 불필요한 HTTP 호출을 하지 않으며, 프론트가 보낸 임의 요약을 사용하지 않습니다.
+
+```python
+summary = calculate_summary(self.data_service.list_data())
+summary_json = summary.model_dump(mode="json")
+instructions = ANSWER_RULES + "\n현재 데이터 요약 JSON:\n" + json.dumps(summary_json, ensure_ascii=False, allow_nan=False)
+answer = self.ai_service.generate(instructions, messages)
+```
+
+[OpenAIService.generate](backend/app/services/openai_client.py)는 위 instructions를 **role=system**에 넣어 실제 Chat Completions를 호출합니다.
+
+```python
+response = client.chat.completions.create(
+    model=self.settings.model,
+    messages=[{"role": "system", "content": instructions}, *messages],
+    max_completion_tokens=self.settings.max_output_tokens,
+)
+```
+
+### 3. 채팅 성공은 자동 저장 확인 뒤 반환합니다
+
+[ChatService.chat](backend/app/services/chat.py)는 GPT 답변의 형식과 사용량을 검증한 뒤 신규 대화에 `self.conversations.create_chat(messages=[user, assistant], ...)`, 기존 대화에는 `self.conversations.append_chat(snapshot, user, assistant, ...)`를 호출합니다. 저장 결과 record를 받은 뒤에만 `ChatResponse(conversation_id=record.id, reply=assistant.content, saved=True, ...)`를 반환합니다. 이 표기는 호출 인자를 생략한 흐름 설명이며 실행 코드 전체는 링크에 있습니다.
+
+2026-10-29 [실제 Render 검증 JSON](docs/submission/evidence/render-gpt-2026-10-29.json)에 실제 GPT 요청1회·성공1회, `chat.saved=true`, `full_detail_matches=true`, `listed_exactly_once=true`가 기록돼 있습니다. 이번에는 기존 답변을 불러와 캡처했으므로 새 GPT 호출이 필요하지 않았습니다.
+
+저장 확인 실패는 `saved:false`와503 `chat_save_failed`(충돌409 `conversation_changed`)를 반환합니다. 화면은 이전 질문 목록 확인을 안내하며 자동 GPT 재호출을 하지 않습니다. 저장되지 않은 답변을 복구하는 별도 큐는 없습니다. [실패/재시도 규격](docs/submission/PRE_EVALUATION_RESPONSE.md)을 참고하세요.
+
+### 4. 모바일 스타일시트가 포함돼 있습니다
+
+[frontend/styles.css](frontend/styles.css)에 실제 미디어 쿼리가 있으며 [index.html](frontend/index.html)이 이를 로드합니다. 아래는 해당 규칙에서 필요한 선언만 발췌한 것입니다.
+
+```css
+@media(max-width:760px) {
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .chat-workspace { grid-template-columns:1fr; }
+  .data-workspace { grid-template-columns:1fr; gap:15px; }
+  .row-button { min-width:44px; min-height:44px; }
+}
+@media(max-width:420px) { .page-shell { padding:0 15px; } }
+@media (max-width:600px) { #access-token { width:100%; max-width:none; flex-basis:100%; box-sizing:border-box; } }
+```
+
+기존 [PC1440·모바일390 화면 검증](docs/submission/evidence/responsive-browser-2026-10-29.json)을 재사용합니다. 이는 당시 UI 검증이며 최신 배포 전체 모바일 재검수를 했다는 뜻은 아닙니다.
+
+### 5. 컨텍스트 주입의 장점·단점·비용
+
+- **장점:** 원본128행을 매 질문마다 모두 보내는 대신 기간·개수·평균·극값·두12개월 구간의 추세·한계를 전달합니다. 일반 답변보다 사용자 자료에 근거한 답변을 유도하고 원본 전체 전달 대비 입력 토큰을 줄일 수 있습니다. 계산은 서버가 맡고 화면과 GPT가 같은 계산 규칙을 사용합니다. 모델을 재학습시키는 방식은 아닙니다.
+- **정보 손실과 정확성:** 요약에 없는 개별 월 값·이동 원인·정책 효과는 알 수 없습니다. 저장된 최신 월이 현재 달이라는 보장도 없습니다. 시스템 지침이 오답이나 사용자 입력에 의한 지침 교란을 완전히 막지는 못하므로 답변의 수치·기간·해석 한계를 확인해야 합니다. 메모는 요약에 넣지 않습니다.
+- **갱신 시점:** 질문마다 DB를 다시 읽어 요약을 생성하지만, 그 뒤 다른 요청이 자료를 바꾸면 생성 시점의 요약과 현재 화면이 다를 수 있습니다. 대화에는 last_summary를 함께 저장합니다.
+- **비용과 제한:** 요약과 시스템 지침도 매 요청의 입력 토큰입니다. 최근 최대5문답·12,000자 범위의 이력, 질문2,000자, 기본 출력800토큰, SDK 제한45초, `max_retries=0`으로 범위를 제한합니다. 출력 제한은 입력 비용까지 포함한 금액 상한이 아닙니다. 실제 비용은 제공자의 과금 정책·입출력 토큰에 따르며 이력 길이에 따라 늘어납니다. 저장 실패해도 이미 생성된 GPT 비용이 취소되지는 않습니다.
+- **운영 한계:** 요약 계산은 현재 DB 전체 조회를 사용하므로 자료가 커지면 읽기 비용과 지연도 증가합니다. 현재128건 규모의 구현이며 대규모 캐시/증분 집계는 구현하지 않았습니다.
+
+## OpenAPI 예시와 배포 설정 안내
+
+[채팅 스키마](backend/app/schemas/chat.py)에 요청/응답 examples, [요약 스키마](backend/app/schemas/summary.py)에 가상24개월 자료 응답 example을 추가했습니다. 모두 **문서용 가상 예시**입니다. GET `/api/data/summary`에는 요청 본문이 없고 POST `/api/chat`은 `{"message":"최근 저장된 데이터의 추세와 해석 한계를 알려줘.","conversation_id":null}`을 받습니다. 요약 주입은 백엔드가 담당합니다. 예시의 로컬 검증·운영 반영 상태는 [보완 검증 기록](docs/submission/pre-evaluation-verification-2026-11-04.json)에 구분합니다.
+
+1. Render 서비스의 Environment에서 아래 변수 표에 따라 Firebase·GPT·접근 토큰 비밀값을 서버에만 등록합니다. Root Directory `backend`, 빌드/실행 명령은 아래 배포 절과 [DEPLOY_RENDER.md](DEPLOY_RENDER.md)를 따릅니다.
+2. `ALLOWED_ORIGINS` 예시는 `http://localhost:5500,http://127.0.0.1:5500,https://gajimaiso-ai-assistant.vercel.app`입니다. 로컬만 사용할 때는 앞의 두 origin, 운영은 정확한 Vercel origin을 포함합니다. origin에는 경로와 끝 슬래시를 넣지 않습니다. CORS는 접근 토큰 인증을 대체하지 않습니다.
+3. Vercel Project Settings에서 Root Directory `frontend`, Build `node build.mjs`, Output `dist`를 지정합니다. Environment Variables에 공개 `API_BASE_URL=https://gajimaiso-ai-assistant.onrender.com`을 Production 대상으로 설정하고 빌드합니다. GPT 키·Firebase JSON·관리 토큰은 Vercel 프론트 변수에 넣지 않습니다.
+4. 설정 변경은 해당 배포에 반영된 뒤 공개 config.js와 `/docs`로 확인합니다. Render 콜드스타트는 먼저 `/health`를 조회해 기동을 기다릴 수 있습니다. 주기적 워밍이나 질문 자동 재시도는 구현하지 않았으며 조회 대기65초 후 수동 새로고침 정책을 사용합니다.
+
+위는 운영 안내이며 이번에 기존 비밀값이나 배포 환경변수를 변경했다는 뜻은 아닙니다. 저장 실패·더미 주입·컬렉션 설계·XSS·요약 변경 위치는 [항목별 보완 문서](docs/submission/PRE_EVALUATION_RESPONSE.md)에 정리했습니다.
 
 ## 기능과 데이터 흐름
 
@@ -111,7 +193,7 @@ Render의 첫 접속은 서버 기동 때문에 늦을 수 있습니다. 화면�
 - **이번 실행:** Vercel·Render docs·health HTTP200, 운영 자료128건·요약·Swagger 확인. 이후 운영 질문5건 중 기존 GPT 문답 복원과 누락 캡처를 확보했습니다. 격리 Firestore 추가201·정리 완료, 원본128건·질문5건의 전체 값·생성/수정시각 해시 전후 일치. [접속 결과](docs/submission/deployment-check-2026-11-04.json).
 - **기존 실행 재사용:** 격리 Firestore CRUD, 실제 GPT 생성·저장·복원, 인증/CORS, 로컬 PC1440·모바일390, 보안 관련80개·프론트47개. 이번 재실행 없음.
 - **사용자 확인:** 참조 대화에서 Vercel 토큰 연결·자료128건·이전 질문4건·답변 복원 성공을 확인했으므로 이전16단계 대기 상태를 갱신합니다.
-- **남은 사용자 확인:** 저장소 공개 전환, 보호 기능의 평가/시연 방식, 학습 사이트 실제 제출 접수. [사용자 확인사항](docs/submission/USER_HANDOFF.md). 배포판 전체 PC/모바일 재검수와 보너스 기능은 필수 미완료 항목이 아닙니다.
+- **남은 사용자 확인:** 보호 기능의 평가/시연 방식(직접 조작을 요구할 경우), 학습 사이트 실제 제출 접수. 저장소 공개 및 비로그인 README·이미지 접근은 확인 완료입니다. [사용자 확인사항](docs/submission/USER_HANDOFF.md). 배포판 전체 PC/모바일 재검수와 보너스 기능은 필수 미완료 항목이 아닙니다.
 - **최종 캡처3종:** 아래2026-11-04 실제 화면을 사용합니다. [촬영·정리·보존 기록](docs/submission/capture-verification-2026-11-04.json)과 [캡처 설명](docs/submission/SCREENSHOTS.md)을 함께 확인하세요.
 
 기존 `.local` 근거 중 검토한 파일만 제출 폴더로 복사했습니다. 아래 과거 이력의 `.local` 링크는 로컬 감사용이며 GitHub에서 열리지 않습니다. 제출용 링크는 위 `docs/submission`을 사용합니다. 원격 반영 및 제출 상태는 [최종 체크리스트](docs/submission/CHECKLIST.md)에 구분해 기록합니다.

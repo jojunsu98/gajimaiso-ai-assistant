@@ -1,0 +1,84 @@
+{
+  "checked_at": "2026-11-04T03:40:02.465131+00:00",
+  "authentication": "No Authorization header, no cookie jar; anonymous urllib requests",
+  "checks": [
+    {
+      "url": "https://api.github.com/repos/jojunsu98/gajimaiso-ai-assistant",
+      "status": 200,
+      "bytes": 5676,
+      "sha256": "7120dfc676612192c1edbe486501494f996cf25708cfd7a3efc06c64bf474945",
+      "visibility": "public",
+      "private": false,
+      "default_branch": "main"
+    },
+    {
+      "url": "https://github.com/jojunsu98/gajimaiso-ai-assistant",
+      "status": 200,
+      "bytes": 583257,
+      "sha256": "8e6d0d16cfa74881e6d7c08e79db3a059ed249ed0d4b762889437d6c335dcb08"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/jojunsu98/gajimaiso-ai-assistant/main/README.md",
+      "status": 200,
+      "bytes": 86309,
+      "sha256": "92adb925cc2d827a7e2388af0a56cbace0df587e93cedebd802626b448ff8e96"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/jojunsu98/gajimaiso-ai-assistant/main/docs/submission/screenshots/06-gpt-summary-live-2026-11-04.jpg",
+      "status": 200,
+      "bytes": 175584,
+      "sha256": "8a90f04c00a4ff506a5d38104409070965236d65070e867e9d39e08c312abb04",
+      "matches_local": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/jojunsu98/gajimaiso-ai-assistant/main/docs/submission/screenshots/07-history-restored-live-2026-11-04.jpg",
+      "status": 200,
+      "bytes": 95835,
+      "sha256": "5396505d510e512510ccc6c1abc9352b35a9da3e1547425516efa28acb76d0b6",
+      "matches_local": true
+    },
+    {
+      "url": "https://raw.githubusercontent.com/jojunsu98/gajimaiso-ai-assistant/main/docs/submission/screenshots/08-crud-create-result-2026-11-04.jpg",
+      "status": 200,
+      "bytes": 46251,
+      "sha256": "bae78b01a78376fe58308f4fce9ed0460242c95d02270a6cd9c9d9eab5ec0a56",
+      "matches_local": true
+    },
+    {
+      "url": "https://gajimaiso-ai-assistant.vercel.app/config.js",
+      "status": 200,
+      "sha256": "9d675543d6a8defe4e2c4acad02bfef15c7dc5cc3f59b9369b45a2c1d50b28fd",
+      "render_origin_present": true
+    },
+    {
+      "url": "https://gajimaiso-ai-assistant.vercel.app/styles.css",
+      "status": 200,
+      "sha256": "9c4c67f8682cd6a5a1fc3bdb6f9021aaddce6e981fbbe1f65e796a006a0ff320",
+      "responsive_rules_present": true
+    }
+  ],
+  "browser_check": {
+    "signed_out_sign_in_link": true,
+    "repository_badge": "Public",
+    "readme_images": [
+      {
+        "alt": "운영 요약과 저장 GPT 답변",
+        "complete": true,
+        "natural_width": 1265,
+        "natural_height": 1740
+      },
+      {
+        "alt": "격리 Firestore 추가 완료와 목록 갱신",
+        "complete": true,
+        "natural_width": 1265,
+        "natural_height": 740
+      },
+      {
+        "alt": "이전 질문 선택과 저장 문답 복원",
+        "complete": true,
+        "natural_width": 1265,
+        "natural_height": 895
+      }
+    ]
+  }
+}
