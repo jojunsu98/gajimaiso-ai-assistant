@@ -1,0 +1,45 @@
+{
+  "user_confirmed": {
+    "edit_2042_02": [
+      -12,
+      -15
+    ],
+    "average": [
+      -6,
+      -7.5
+    ],
+    "data_count_after_delete": [
+      2,
+      1
+    ],
+    "conversation_count_after_delete": [
+      1,
+      0
+    ],
+    "deletion_notice": true
+  },
+  "agent_read_only_verification": {
+    "remaining_record": "changwon-net-2042-01",
+    "data_count": 1,
+    "average": 0.0,
+    "conversation_count": 0
+  },
+  "recorded_requests": [
+    {
+      "method": "PUT",
+      "path": "/api/data/changwon-net-2042-02",
+      "status": 200
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/data/changwon-net-2042-02",
+      "status": 204
+    },
+    {
+      "method": "DELETE",
+      "path": "/api/conversations/27f347b8-d619-4883-93a1-73d79dcc8cd0",
+      "status": 204
+    }
+  ],
+  "actual_ai_calls": 0
+}

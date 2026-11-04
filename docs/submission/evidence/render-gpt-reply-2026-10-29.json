@@ -1,0 +1,70 @@
+{
+  "question": "[Render 연결 검증] 저장된 최신 월을 기준으로 최근 창원시 순이동 추세를 간단히 설명해줘.",
+  "response": {
+    "conversation_id": "34766710-ca74-465f-b0e0-f92fbc58e8d2",
+    "reply": "창원시 월별 순이동자수는 **최신 저장 월 2026-08에 -813명**으로, 전입보다 전출이 많았습니다.  \n서버 요약 기준으로 **최근 12개월(2025-09~2026-08) 평균은 -558.0명**, **직전 12개월(2024-09~2025-08) 평균은 -551.42명**으로, 최근 평균이 조금 더 낮아 **하락**으로 판정되었습니다.  \n다만 이 데이터는 **순이동만** 보여주므로 출생·사망을 포함한 전체 인구 증감과는 다르며, 원인이나 정책 효과까지는 확인할 수 없습니다.",
+    "saved": true,
+    "data_period": {
+      "start": "2016-01",
+      "end": "2026-08"
+    },
+    "model": "gpt-5.4-mini",
+    "usage": {
+      "input_tokens": 716,
+      "output_tokens": 160
+    }
+  },
+  "expected_summary": {
+    "metric": "창원시 월별 순이동자수",
+    "unit": "명",
+    "frequency": "monthly",
+    "period": {
+      "start": "2016-01",
+      "end": "2026-08"
+    },
+    "count": 128,
+    "metrics": {
+      "total": -82400,
+      "average": -643.75,
+      "max": 430,
+      "min": -1756,
+      "max_months": [
+        "2021-06"
+      ],
+      "min_months": [
+        "2025-02"
+      ]
+    },
+    "latest": {
+      "month": "2026-08",
+      "value": -813
+    },
+    "trend": {
+      "method": "latest_12m_mean_vs_previous_12m_mean",
+      "status": "decrease",
+      "recent_period": {
+        "start": "2025-09",
+        "end": "2026-08"
+      },
+      "previous_period": {
+        "start": "2024-09",
+        "end": "2025-08"
+      },
+      "recent_average": -558.0,
+      "previous_average": -551.42,
+      "difference": -6.58,
+      "description": "최신 저장 월 2026-08을 기준으로 최근 12개월과 직전 12개월 평균을 비교합니다. 최근 2025-09~2026-08와 직전 2024-09~2025-08의 평균 차이를 반올림 전에 판정한 결과, 순이동 수치가 하락했습니다. 최근 24개월 구간은 연속합니다."
+    },
+    "quality": {
+      "missing_months": []
+    },
+    "limitations": [
+      "순이동은 전입과 전출의 차이이며 전체 인구 증감과 동일하지 않음",
+      "최신 저장 월까지의 분석이며 현재 달 실적을 의미하지 않음",
+      "이 데이터만으로 이동 원인이나 특정 정책 효과를 확정할 수 없음",
+      "음수의 상승은 순유출 규모 감소일 수 있으며 순유입 전환과 다름",
+      "사용자가 수정한 저장값은 원본 공식 통계와 달라질 수 있음"
+    ]
+  },
+  "answer_review": "Compare factual numbers and interpretation manually; do not call AI again."
+}

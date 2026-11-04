@@ -1,0 +1,48 @@
+{
+  "actualQuestion": "저장된 최신 월을 기준으로 최근 창원시 순이동 추세를 간단히 설명해줘.",
+  "realChat": {
+    "loadingShown": true,
+    "sendAndInputDisabled": true,
+    "autoSaved": true,
+    "listed": true,
+    "reloadExactMatch": true,
+    "reselectedFromList": true,
+    "conversationId": "4bc508f3-e079-40d6-9174-4157e5a5e79f"
+  },
+  "errors": {
+    "invalidInteger": "순이동자수는 소수·쉼표·지수 표기 없이 정수로 입력하세요. 음수와 0은 가능합니다.",
+    "duplicate": {
+      "status": 409,
+      "code": "duplicate_month",
+      "message": "같은 월의 기록이 이미 있습니다. 목록에서 해당 월을 확인하세요. (HTTP 409 · duplicate_month)"
+    },
+    "missingConversation": {
+      "status": 404,
+      "code": "conversation_not_found",
+      "message": "대화가 없거나 삭제되었습니다. 이전 대화 목록을 새로고침하세요. (HTTP 404 · conversation_not_found)"
+    },
+    "unavailableServer": {
+      "code": "network_error",
+      "message": "요약 조회 실패 · 서버에 연결하지 못했습니다. 로컬 서버 주소·실행 상태·CORS 설정을 확인하세요. 변경 요청이었다면 반영 여부를 목록에서 먼저 확인하세요. (network_error)"
+    },
+    "mockGptFailure": {
+      "status": 502,
+      "code": "openai_request_failed",
+      "inputPreserved": true,
+      "saved": false,
+      "message": "저장 완료로 확인되지 않았습니다. AI 답변 생성에 실패했습니다. 자동 재전송하지 않았습니다. (HTTP 502 · openai_request_failed)"
+    }
+  },
+  "dialogBrowserChecks": {
+    "dataEdit": "manual_required",
+    "dataDelete": "manual_required",
+    "conversationDelete": "manual_required",
+    "reason": "No documented pre-registered dialog event handler; prior accept timeouts were not repeated."
+  },
+  "screenshot": "final-gpt-restored.jpg",
+  "consoleErrorLogs": [],
+  "checkedAtUTC": "2026-10-29T04:24:44.690Z",
+  "normalAddressRestored": true,
+  "normalBrowserDataCount": 128,
+  "normalBrowserConversationCount": 3
+}

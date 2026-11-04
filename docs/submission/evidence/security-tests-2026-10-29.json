@@ -1,0 +1,13 @@
+{
+  "total": 80,
+  "passed": 80,
+  "failed": 0,
+  "suites": [
+    "test_security",
+    "test_data_api",
+    "test_chat_api",
+    "test_codyssey_http"
+  ],
+  "real_ai_calls": 0,
+  "real_db_writes": 0
+}

@@ -1,0 +1,196 @@
+{
+  "scope": "pure frontend helpers and fake HTTP; no backend, Firebase, or AI requests",
+  "total": 47,
+  "passed": 47,
+  "failed": 0,
+  "results": [
+    {
+      "name": "month uses representative day without timezone conversion",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"\"",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"2026-00\"",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"2026-13\"",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"2026-8\"",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"26-08\"",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"2026-08-01\"",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"0000-01\"",
+      "passed": true
+    },
+    {
+      "name": "invalid month rejected: \"2026-08<script>\"",
+      "passed": true
+    },
+    {
+      "name": "negative and zero integer input stay exact",
+      "passed": true
+    },
+    {
+      "name": "safe integer boundaries stay exact",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \" \"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"1.5\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"1.0\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"1e3\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"NaN\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"Infinity\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"1,234\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"9007199254740992\"",
+      "passed": true
+    },
+    {
+      "name": "invalid or lossy integer rejected: \"-9007199254740992\"",
+      "passed": true
+    },
+    {
+      "name": "formatted numbers distinguish negative, zero and missing",
+      "passed": true
+    },
+    {
+      "name": "Enter submits only without shift or Korean composition",
+      "passed": true
+    },
+    {
+      "name": "each request category has a finite bounded timeout",
+      "passed": true
+    },
+    {
+      "name": "chat targets only the configured backend with the API request contract",
+      "passed": true
+    },
+    {
+      "name": "read request passes the actual payload without invented data",
+      "passed": true
+    },
+    {
+      "name": "204 deletion never parses JSON",
+      "passed": true
+    },
+    {
+      "name": "HTTP 422 carries status and displays safe local guidance",
+      "passed": true
+    },
+    {
+      "name": "HTTP 409 carries status and displays safe local guidance",
+      "passed": true
+    },
+    {
+      "name": "HTTP 404 carries status and displays safe local guidance",
+      "passed": true
+    },
+    {
+      "name": "HTTP 503 carries status and displays safe local guidance",
+      "passed": true
+    },
+    {
+      "name": "422 FastAPI validation arrays retain safe status guidance",
+      "passed": true
+    },
+    {
+      "name": "non-JSON server errors do not leak body or parser error",
+      "passed": true
+    },
+    {
+      "name": "invalid successful JSON is a response error instead of made-up data",
+      "passed": true
+    },
+    {
+      "name": "unknown or malformed server codes do not expose server details",
+      "passed": true
+    },
+    {
+      "name": "network failure remains distinct and never retries a chat",
+      "passed": true
+    },
+    {
+      "name": "chat timeout aborts browser wait once and advises checking saved history",
+      "passed": true
+    },
+    {
+      "name": "invalid backend configuration rejected: file:///local",
+      "passed": true
+    },
+    {
+      "name": "invalid backend configuration rejected: https://user:pass@example.invalid",
+      "passed": true
+    },
+    {
+      "name": "invalid backend configuration rejected: https://example.invalid/v1",
+      "passed": true
+    },
+    {
+      "name": "invalid backend configuration rejected: https://example.invalid/?key=fake",
+      "passed": true
+    },
+    {
+      "name": "invalid backend configuration rejected: https://example.invalid/#fragment",
+      "passed": true
+    },
+    {
+      "name": "unsupported request path rejected before fetch: https://example.invalid/api/chat",
+      "passed": true
+    },
+    {
+      "name": "unsupported request path rejected before fetch: /health",
+      "passed": true
+    },
+    {
+      "name": "unsupported request path rejected before fetch: /api/chat?key=fake",
+      "passed": true
+    },
+    {
+      "name": "unsupported request path rejected before fetch: /api/chat#fragment",
+      "passed": true
+    },
+    {
+      "name": "unknown timeout category cannot start a request",
+      "passed": true
+    }
+  ]
+}

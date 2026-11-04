@@ -1,0 +1,93 @@
+[
+  {
+    "source": ".local/verification-13-14/final-gpt-restored.jpg",
+    "packaged_file": "screenshots/01-gpt-summary-2026-10-29.jpg",
+    "sha256": "4cd9ab6ffacb370d6f3f4d3102cd8a8c48a66bfe61c56d3051f586732f24fdd8",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-13-14/ui-integration/mobile-390-data.jpg",
+    "packaged_file": "screenshots/02-crud-2026-10-29.jpg",
+    "sha256": "d69da4f023c9ddb1dcb8f659dd81a9e5ffe43c8ca0093da9898be05734108680",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-13-14/mobile-390-chat.jpg",
+    "packaged_file": "screenshots/03-history-2026-10-29.jpg",
+    "sha256": "ed636a2cab77c820efa967d92a38a160a1b2ee1a068f72f0fdc47aaeb5c91e33",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-13-14/final-api-results.json",
+    "packaged_file": "evidence/crud-isolated-2026-10-29.json",
+    "sha256": "98622c758cb3b0f38c6f29c727329eb5c40bb13830a58bed69953824f584f421",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-13-14/final-browser-results.json",
+    "packaged_file": "evidence/gpt-browser-2026-10-29.json",
+    "sha256": "19d42a38db61829d59e4c24a569088970b16d9ae7547c53cf8d223ca9efeee37",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-13-14/ui-integration/manual-confirmation.json",
+    "packaged_file": "evidence/crud-user-confirmation-2026-10-29.json",
+    "sha256": "9553bb9c130f0ae4acc73eddb852ac643138dcba5d39e73a51c82eb581bec4f4",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-13-14/ui-integration/browser-results.json",
+    "packaged_file": "evidence/responsive-browser-2026-10-29.json",
+    "sha256": "261d540b8578c970c7d63e9c65ebab8827978d8193b5b100bc5d41f071aac7b8",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-15/render-resume-20261029T125347566349Z-54c196ba-report.json",
+    "packaged_file": "evidence/render-gpt-2026-10-29.json",
+    "sha256": "55afe0ee8c63c755406a2a89b20d0112258614d2e44edece3a268a27ed17a930",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-15/render-resume-20261029T125347566349Z-54c196ba-reply.json",
+    "packaged_file": "evidence/render-gpt-reply-2026-10-29.json",
+    "sha256": "a0c5b54519c306471d79849329ea69920fc6ffe881bcbf1c7b9ffafdd2e7ee2d",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-15/stage16-read-verification.json",
+    "packaged_file": "evidence/vercel-api-2026-10-29.json",
+    "sha256": "308577c55ebfe4008f98eb1d4e0fd97c8f3477d190a340286208541694e0e2c8",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-15/backend-tests.json",
+    "packaged_file": "evidence/security-tests-2026-10-29.json",
+    "sha256": "52724ddf36e66b02dceddb68e094d6dd54aedd60b70ab58b7735140edc09fb5c",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/verification-13-14/ui-integration/frontend-tests.json",
+    "packaged_file": "evidence/frontend-tests-2026-10-29.json",
+    "sha256": "a77584be6e9584baef5b481c5e23450a292c46c1ff9c4c1e36dc40a8c1325c9c",
+    "source_unchanged": true,
+    "reused_historical_evidence": true
+  },
+  {
+    "source": ".local/frontend-submission-capture-20261104-01-report.json",
+    "packaged_file": "evidence/crud-capture-2026-11-04.json",
+    "sha256": "8d628bbbe526ad2941ae75e16f8586c2b2aaf09e8098b0810a61876cc2dae945",
+    "source_unchanged": true,
+    "reused_historical_evidence": false
+  }
+]

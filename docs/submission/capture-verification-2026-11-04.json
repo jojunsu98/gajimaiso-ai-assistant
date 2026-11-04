@@ -1,0 +1,70 @@
+{
+  "date_kst": "2026-11-04",
+  "purpose": "Complete missing submission screenshots; not rerun full test suite",
+  "production": {
+    "url": "https://gajimaiso-ai-assistant.vercel.app/",
+    "data_count": 128,
+    "conversation_count": 5,
+    "existing_conversation_selected": "34766710-ca74-465f-b0e0-f92fbc58e8d2",
+    "saved_reply_restored": true,
+    "summary_question_answer_visible_together": true,
+    "history_selected_and_restore_notice_visible": true,
+    "input_token_field_empty_in_screenshot": true,
+    "gpt_requests": 0,
+    "database_writes": 0,
+    "console_error_entries_observed": 0
+  },
+  "isolated": {
+    "url": "http://127.0.0.1:5502/",
+    "data_collection": "_frontend_data_checks_submission_capture_20261104_01",
+    "frontend_application_files": "Exact app.js/api.js/styles.css copies; config origin changed; isolated-demo banner added to HTML copy",
+    "create_status": 201,
+    "created_record": {
+      "date": "2044-01-01",
+      "value": -12,
+      "memo": "제출 캡처용 격리 기록 — 실제 운영 자료가 아닙니다."
+    },
+    "created_count": 1,
+    "summary_average": -12,
+    "success_notice_visible": true,
+    "gpt_requests": 0,
+    "fake_ai_requests": 0,
+    "create_writes": 1,
+    "cleanup_deletes": 1,
+    "owned_document_absent_after_cleanup": true,
+    "original_data_128_preserved": true,
+    "original_conversations_5_preserved": true,
+    "backend_exit_code": 0,
+    "static_server_exit_code": 1,
+    "static_exit_reason": "Intentional Ctrl+C shutdown; Keyboard interrupt received, exiting.",
+    "console_error_entries_observed": 0
+  },
+  "application_source_changed": false,
+  "full_test_suite_rerun": false,
+  "screenshots": [
+    {
+      "file": "screenshots/06-gpt-summary-live-2026-11-04.jpg",
+      "purpose": "summary-question-answer",
+      "sha256": "8a90f04c00a4ff506a5d38104409070965236d65070e867e9d39e08c312abb04",
+      "bytes": 175584,
+      "visually_reviewed": true,
+      "unaltered_browser_capture": true
+    },
+    {
+      "file": "screenshots/07-history-restored-live-2026-11-04.jpg",
+      "purpose": "history-restored",
+      "sha256": "5396505d510e512510ccc6c1abc9352b35a9da3e1547425516efa28acb76d0b6",
+      "bytes": 95835,
+      "visually_reviewed": true,
+      "unaltered_browser_capture": true
+    },
+    {
+      "file": "screenshots/08-crud-create-result-2026-11-04.jpg",
+      "purpose": "isolated-create-result",
+      "sha256": "bae78b01a78376fe58308f4fce9ed0460242c95d02270a6cd9c9d9eab5ec0a56",
+      "bytes": 46251,
+      "visually_reviewed": true,
+      "unaltered_browser_capture": true
+    }
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "mode": "isolated-firestore",
+  "run_id": "submission-capture-20261104-01",
+  "ok": true,
+  "started_at_utc": "2026-11-04T03:26:56.932899+00:00",
+  "generation_requests": 0,
+  "saved": false,
+  "demo_listed": false,
+  "demo_reload_matches": false,
+  "finalized": true,
+  "api_requests": [
+    {
+      "method": "GET",
+      "path": "/api/data/summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/data",
+      "status": 200
+    },
+    {
+      "method": "OPTIONS",
+      "path": "/api/conversations",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations",
+      "status": 200
+    },
+    {
+      "method": "OPTIONS",
+      "path": "/api/data",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/data",
+      "status": 201
+    },
+    {
+      "method": "GET",
+      "path": "/api/data/summary",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/data",
+      "status": 200
+    }
+  ],
+  "original_data_count": 128,
+  "existing_conversations_count": 5,
+  "isolated_data_collection": "_frontend_data_checks_submission_capture_20261104_01",
+  "isolated_conversation_collection": "_frontend_conversation_checks_submission_capture_20261104_01",
+  "last_list_count": 0,
+  "fake_ai_calls": 0,
+  "cleanup": {
+    "ok": true,
+    "collections": [
+      {
+        "ok": true,
+        "documents": [
+          {
+            "id": "changwon-net-2044-01",
+            "ok": true,
+            "absent": true
+          }
+        ]
+      },
+      {
+        "ok": true,
+        "documents": []
+      }
+    ]
+  },
+  "retained_demo_ids": [],
+  "data_preserved": {
+    "ok": true,
+    "before_count": 128,
+    "after_count": 128,
+    "before_sha256_including_metadata": "cb0a475784c06377a59baa6bd26680226e8d7e93160e69a4035271e70db1d994",
+    "after_sha256_including_metadata": "cb0a475784c06377a59baa6bd26680226e8d7e93160e69a4035271e70db1d994",
+    "excluded_owned_demo_ids": [],
+    "comparison": "all IDs, typed payloads, create_time and update_time"
+  },
+  "existing_conversations_preserved": {
+    "ok": true,
+    "before_count": 5,
+    "after_count": 5,
+    "before_sha256_including_metadata": "c1cd4a3dd2e1b6055a2ac5e30957a46c76a2efc21c70e7e276d0783bd164bf3f",
+    "after_sha256_including_metadata": "c1cd4a3dd2e1b6055a2ac5e30957a46c76a2efc21c70e7e276d0783bd164bf3f",
+    "excluded_owned_demo_ids": [],
+    "comparison": "all IDs, typed payloads, create_time and update_time"
+  },
+  "finished_at_utc": "2026-11-04T03:28:40.545308+00:00"
+}

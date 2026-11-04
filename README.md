@@ -1,5 +1,148 @@
 # 가지마이소창원 AI 비서
 
+창원시 월별 순이동 자료를 조회·관리하고, 서버가 계산한 요약을 바탕으로 GPT에 질문하는 웹 앱입니다. 답변은 Firestore에 자동 저장되며 이전 질문에서 다시 불러올 수 있습니다.
+
+**2026-11-04 제출 준비 상태:** 공식 과제 원문 대조를 마쳤습니다. 필수 기능·검증 근거·필수 캡처3종·문서를 준비했습니다. 실제 과제 제출 접수는 사용자 확인 전까지 미완료입니다. [공식 요구사항 대조](docs/submission/OFFICIAL_REQUIREMENTS.md)를 참고하세요. 기능 검증은 2026-10-29 실제/격리/모의/사용자 확인 기록을 재사용했고, 새 GPT 호출과 운영 DB 쓰기는0회입니다. 캡처 확보를 위해 실제 Firestore 격리 기록1건을 추가하고 촬영 후 정리 삭제했습니다.
+
+- [웹 앱](https://gajimaiso-ai-assistant.vercel.app) · [백엔드 API 기본 주소](https://gajimaiso-ai-assistant.onrender.com) · [Swagger](https://gajimaiso-ai-assistant.onrender.com/docs)
+- [GitHub 비공개 저장소](https://github.com/jojunsu98/gajimaiso-ai-assistant)
+- [최종 제출 체크리스트](docs/submission/CHECKLIST.md) · [캡처3종과 설명](docs/submission/SCREENSHOTS.md) · [진행 이력](PROGRESS.md)
+
+## 기능과 데이터 흐름
+
+`브라우저 → FastAPI → Firestore 자료 조회 → 서버 요약 계산 → 코디세이 Chat Completions → GPT 답변 → Firestore 저장 → 브라우저 표시`
+
+- 월별 기록 생성·조회·수정·삭제, 평균·극값·최신 월 기준 두12개월 구간 비교.
+- 같은 서버 요약을 화면과 GPT에 사용하며, 저장된 최신 월을 기준으로 분석합니다.
+- GPT 답변 자동 저장, 이전 질문 목록·상세 불러오기·삭제. 불러오기는 GPT 호출이 없습니다.
+- 자료 조회·요약은 공개, 자료 변경·질문 생성·질문 기록은 Bearer 접근 토큰으로 보호합니다.
+- AI 오류 시 자동 재시도·Gemini 자동 전환을 하지 않습니다.
+
+데이터는 기존 프로젝트에서 검증한 창원시 월별 순이동 CSV 128행(2016-01~2026-08)입니다. 출처 기록은 KOSIS 국내인구이동통계 「시군구별 이동자수」이며, 이번에 최신 자료를 다시 내려받지는 않았습니다. [보관 CSV](backend/data/source/changwon_migration_monthly_clean.csv)의 원본과 가져오기 기록은 아래 과거 이력에 보존했습니다. 순이동은 전입−전출이며 출생·사망을 포함한 전체 인구 증감과 다릅니다. 날짜의01은 월 대표일입니다.
+
+## 기술 스택과 구조
+
+| 영역 | 구성 |
+| --- | --- |
+| 프론트엔드 | HTML/CSS/JavaScript ES modules, Vercel 정적 배포 |
+| 백엔드 | Python3.12.10, FastAPI0.162.0, Uvicorn0.54.0 |
+| 저장소 | Firebase Admin7.7.0, Firestore `data`·`conversations` |
+| AI | OpenAI SDK3.40.0, 코디세이 중계 `https://copa.codyssey.kr/v1`, `gpt-5.4-mini` |
+| 배포 | Render 백엔드 + Vercel 프론트엔드 |
+
+- `backend/app/routers/`: HTTP API, `services/`: CRUD·요약·GPT·대화 저장, `schemas/`: 입력/응답 검증
+- `backend/tests/`, `backend/scripts/`: 기존 테스트·명시적 검증 도구
+- `frontend/`: 화면·공통 API·공개 주소 설정·정적 빌드
+- `docs/submission/`: 제출 체크리스트·검토한 증거·캡처
+- 의존성 고정: [requirements.txt](backend/requirements.txt), 설정 예시: [backend/.env.example](backend/.env.example)
+
+## 로컬 실행 방법
+
+다음은 **실행 안내**이며 이번 검수에서 다시 실행한 명령이 아닙니다. 프로젝트 루트에서 수행합니다. 기존 가상환경·설정이 있으면 새로 만들거나 덮어쓰지 않습니다.
+
+처음 설치하는 새 체크아웃에서만:
+
+```powershell
+py -3.12 -m venv .venv
+& '.\.venv\Scripts\python.exe' -m pip install -r backend/requirements.txt
+```
+
+`backend/.env.example`의 변수 이름을 참고해 `backend/.env`를 준비합니다. 기존 파일은 보존하고 실제 비밀값은 Git·채팅에 넣지 않습니다. 별도 두 터미널에서:
+
+```powershell
+# 터미널1: 프로젝트 루트, frontend/config.js의 기본 API 주소와 일치
+& '.\.venv\Scripts\python.exe' -m uvicorn app.main:app --app-dir backend --host 127.0.0.1 --port 8002 --workers 1 --no-access-log
+```
+
+```powershell
+# 터미널2: 프로젝트 루트. frontend 폴더만 제공
+& '.\.venv\Scripts\python.exe' -m http.server 5500 --bind 127.0.0.1 --directory frontend
+```
+
+웹은 `http://127.0.0.1:5500/`, 로컬 Swagger는 `http://127.0.0.1:8002/docs`입니다. 같은 포트에 기존 서버가 있다면 임의 종료하지 않습니다. 새 백엔드는 로컬에서도 접근 토큰을 요구합니다. 이번에 사용자 제공5500 주소는 연결 거부였으며 로컬 서버를 시작·재시작하지 않았습니다.
+
+## 환경변수
+
+| 변수 | 용도 / 설정 위치 |
+| --- | --- |
+| `FIREBASE_PROJECT_ID` | 기존 Firebase 프로젝트ID / 백엔드 |
+| `GOOGLE_APPLICATION_CREDENTIALS` | 로컬 서비스 계정 파일 절대 경로. 키는 프로젝트·OneDrive 밖에 보관 |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | Render 비밀 설정의 서비스 계정 JSON. 값이 있으면 파일 경로보다 우선 |
+| `OPENAI_API_KEY` | 기존 코디세이 키 / 백엔드 비밀 설정 |
+| `OPENAI_BASE_URL` | `https://copa.codyssey.kr/v1` |
+| `OPENAI_MODEL` / `AI_PROVIDER` | `gpt-5.4-mini` / `openai` |
+| `OPENAI_MAX_OUTPUT_TOKENS` / `OPENAI_TIMEOUT_SECONDS` | `800` / `45` |
+| `APP_ACCESS_TOKEN` | GPT 키와 별개인32자 이상 공백 없는 ASCII 접근 토큰 / 백엔드 비밀 설정 |
+| `ALLOWED_ORIGINS` | 로컬2개 출처와 정확한 Vercel 운영 origin. 와일드카드 사용 안 함 |
+| `API_BASE_URL` | Vercel 빌드용 공개 주소 `https://gajimaiso-ai-assistant.onrender.com`만 지정 |
+| `PYTHON_VERSION` / `WEB_CONCURRENCY` | Render의 `3.12.10` / `1` |
+
+실제 토큰·GPT 키·서비스 계정 JSON은 브라우저 코드와 공개 빌드 변수에 넣지 않습니다. 앱의 접근 토큰 입력은 현재 탭 메모리에서만 사용하고 입력란을 비웁니다. 새로고침 후 다시 연결해야 하며 localStorage/sessionStorage/URL에 토큰을 저장하지 않습니다.
+
+## API 목록
+
+| 메서드 | 경로 | 용도 | 인증 |
+| --- | --- | --- | --- |
+| GET | `/health` | 서버 응답만 확인 | 공개 |
+| GET | `/api/data` | 자료 목록 | 공개 |
+| GET | `/api/data/summary` | 저장 자료 요약 | 공개 |
+| POST | `/api/data` | 기록 생성 | 필요 |
+| PUT / DELETE | `/api/data/{id}` | 수정 / 삭제 | 필요 |
+| POST | `/api/chat` | 요약 기반 GPT 질문·자동 저장 | 필요 |
+| POST / GET | `/api/conversations` | 문답 수동 저장 / 목록 | 필요 |
+| GET / DELETE | `/api/conversations/{id}` | 이전 질문 불러오기 / 삭제 | 필요 |
+
+입력 형식 오류422, 중복월409, 없는 기록404, 인증 실패401, 접근 토큰 설정 부적합403, 채팅 제한429를 구분합니다. 구체적인 스키마는 Swagger를 참고합니다.
+
+## 배포와 시연
+
+Render는 `backend`, 빌드 `pip install -r requirements.txt`, 시작 `uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1 --no-access-log`를 사용합니다. Vercel은 Root `frontend`, Build `node build.mjs`, Output `dist`이며 공개파일5개만 배포합니다. [Render 설정 설명](DEPLOY_RENDER.md)과 [배포 설정](render.yaml)을 참고하세요.
+
+1. 웹 앱을 열어 저장 자료128건과 요약을 확인합니다.
+2. 운영자가 허용한 접근 토큰으로 연결한 뒤 기존 질문을 선택하면 추가 GPT 비용 없이 저장 답변을 확인할 수 있습니다.
+3. 원본128건과 기존 질문은 시연을 위해 변경·삭제하지 않습니다. CRUD 동작은 기존 격리 검증 기록과 캡처로 확인합니다.
+
+이 앱의 토큰은 **단일 관리 권한**입니다. 사용자별 로그인·권한·기록 격리를 구현한 서비스가 아닙니다. 자료의 메모도 공개 조회되므로 개인정보나 비밀값을 넣지 않습니다. 원인·정책 효과를 데이터만으로 확정하지 않습니다.
+
+Render의 첫 접속은 서버 기동 때문에 늦을 수 있습니다. 화면의 자료 로딩 안내를 기다리고, 조회 대기65초가 끝나면 잠시 후 **요약 새로고침/자료 새로고침**으로 조회만 다시 확인하세요. 질문 전송이나 자료 변경은 반영 여부를 먼저 확인하고 반복 전송하지 마세요. 백엔드 기본 주소의 루트 응답과 별개로 서버 상태는 `/health`, API 문서는 `/docs`에서 확인합니다.
+
+## 검증과 제출 증거
+
+- **이번 실행:** Vercel·Render docs·health HTTP200, 운영 자료128건·요약·Swagger 확인. 이후 운영 질문5건 중 기존 GPT 문답 복원과 누락 캡처를 확보했습니다. 격리 Firestore 추가201·정리 완료, 원본128건·질문5건의 전체 값·생성/수정시각 해시 전후 일치. [접속 결과](docs/submission/deployment-check-2026-11-04.json).
+- **기존 실행 재사용:** 격리 Firestore CRUD, 실제 GPT 생성·저장·복원, 인증/CORS, 로컬 PC1440·모바일390, 보안 관련80개·프론트47개. 이번 재실행 없음.
+- **사용자 확인:** 참조 대화에서 Vercel 토큰 연결·자료128건·이전 질문4건·답변 복원 성공을 확인했으므로 이전16단계 대기 상태를 갱신합니다.
+- **남은 사용자 확인:** 저장소 공개 전환, 보호 기능의 평가/시연 방식, 학습 사이트 실제 제출 접수. [사용자 확인사항](docs/submission/USER_HANDOFF.md). 배포판 전체 PC/모바일 재검수와 보너스 기능은 필수 미완료 항목이 아닙니다.
+- **최종 캡처3종:** 아래2026-11-04 실제 화면을 사용합니다. [촬영·정리·보존 기록](docs/submission/capture-verification-2026-11-04.json)과 [캡처 설명](docs/submission/SCREENSHOTS.md)을 함께 확인하세요.
+
+기존 `.local` 근거 중 검토한 파일만 제출 폴더로 복사했습니다. 아래 과거 이력의 `.local` 링크는 로컬 감사용이며 GitHub에서 열리지 않습니다. 제출용 링크는 위 `docs/submission`을 사용합니다. 원격 반영 및 제출 상태는 [최종 체크리스트](docs/submission/CHECKLIST.md)에 구분해 기록합니다.
+
+## 제출 스크린샷
+
+### 데이터 요약·질문·GPT 답변
+
+![운영 요약과 저장 GPT 답변](docs/submission/screenshots/06-gpt-summary-live-2026-11-04.jpg)
+
+운영 사이트에서 기존 실제 GPT 답변을 불러온 화면입니다. 새 GPT 생성 없이 요약과 질문·답변을 함께 확인합니다.
+
+### 데이터 관리 — 실제 추가 결과
+
+![격리 Firestore 추가 완료와 목록 갱신](docs/submission/screenshots/08-crud-create-result-2026-11-04.jpg)
+
+실제 Firestore 격리 컬렉션의2044-01/-12 추가 완료·목록1건입니다. 원본과 별도이며 촬영 후 소유 기록을 정리했습니다.
+
+### 이전 질문 불러오기
+
+![이전 질문 선택과 저장 문답 복원](docs/submission/screenshots/07-history-restored-live-2026-11-04.jpg)
+
+질문 목록5건 중 선택한 문답과 복원 완료 안내가 표시됩니다. 과거 기록의 질문4건과 시점이 다릅니다.
+
+<details>
+<summary>과거 개발·검증 이력 (당시 실패·미완료 상태 포함)</summary>
+
+아래는 기존 README 원문입니다. 당시 상태를 보존했으며 현재 판정은 위 안내와 최종 체크리스트를 우선합니다.
+
+# 가지마이소창원 AI 비서
+
 **16단계 진행 중:** [Vercel 운영 화면](https://gajimaiso-ai-assistant.vercel.app) 배포와 Render API·인증·CORS·원본 보존 검증은 통과했습니다. Chrome 확장프로그램 창 차단 해제 및 사용자 토큰 입력 후 실제 PC/모바일·질문 불러오기·콘솔 검증이 남아 있어 아직 완료가 아닙니다. Vercel 환경변수는 공개 `API_BASE_URL` 하나임을 확인했습니다. 상세 결과는 마지막 16단계 기록을 참고하세요.
 
 **15단계 완료 (2026-10-29 21:54 KST):** 수정된 토큰으로 실제 Render API 인증 200, 무인증·오인증 401 차단, Firebase 원본 128건·요약 조회를 확인했습니다. 코디세이 GPT 실제 생성은 정확히 1회 성공했고 자동 저장·목록·상세 복원이 일치합니다. 원본 자료와 기존 질문 3건은 검증 전후 동일하며 검증 질문 1건만 추가돼 현재 질문은 4건입니다. 기존 서버·Swagger·CORS 검증은 재실행하지 않고 이전 근거를 유지했습니다. **16단계는 시작하지 않고 중단합니다.** [배포 안내](DEPLOY_RENDER.md) 및 아래 최종 검증 기록을 참고하세요.
@@ -799,3 +942,6 @@ Vercel 배포는 후속 작업입니다. 공개 `API_BASE_URL` 빌드 설정으�
 - 이번 관련 검증: 빌드 5파일·JS 모듈 구문·신규 인증 전달 4항목 통과. 실제 운영 파일 모두200/비밀값 미검출, Render 자료·요약·질문 목록200, 기존 128건/질문4건 전체 상세 보존, 무인증·오인증401, CORS 운영출처200/미허용출처400. GPT 생성0회·DB 쓰기0회. 이전 전체 테스트는 반복하지 않았습니다.
 - 남은 필수 검증: Chrome 확장프로그램 UI가 자동화를 차단해 사용자의 닫기 및 토큰 입력 대기. 실제 PC·모바일 레이아웃·기존 질문 UI 불러오기·최종 콘솔 검증은 아직 완료로 표시하지 않습니다.
 - 근거: `.local/verification-15/stage16-read-verification.json`. 17단계 종합 테스트는 시작하지 않았습니다.
+
+
+</details>

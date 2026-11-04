@@ -1,0 +1,54 @@
+{
+  "origin": "https://gajimaiso-ai-assistant.vercel.app",
+  "ai_requests": 0,
+  "database_writes": 0,
+  "checks": {
+    "data": {
+      "status": 200,
+      "unchanged": true,
+      "cors": true
+    },
+    "summary": {
+      "status": 200,
+      "unchanged": true,
+      "cors": true
+    },
+    "conversations": {
+      "status": 200,
+      "unchanged": true,
+      "cors": true
+    },
+    "existing_four_details_unchanged": true,
+    "none_blocked": true,
+    "invalid_blocked": true,
+    "cors_allowed": {
+      "status": 200,
+      "allow_origin": "https://gajimaiso-ai-assistant.vercel.app"
+    },
+    "cors_denied": {
+      "status": 400,
+      "allow_origin": null
+    },
+    "public_index": {
+      "status": 200,
+      "secret_scan_passed": true
+    },
+    "public_app.js": {
+      "status": 200,
+      "secret_scan_passed": true
+    },
+    "public_api.js": {
+      "status": 200,
+      "secret_scan_passed": true
+    },
+    "public_config.js": {
+      "status": 200,
+      "secret_scan_passed": true
+    },
+    "built_api_origin": true,
+    "public_styles.css": {
+      "status": 200,
+      "secret_scan_passed": true
+    }
+  }
+}

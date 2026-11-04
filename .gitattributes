@@ -1,0 +1,2 @@
+# Preserve copied verification evidence bytes and their published SHA-256.
+docs/submission/evidence/*.json -text

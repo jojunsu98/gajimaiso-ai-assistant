@@ -1,0 +1,93 @@
+{
+  "desktop": {
+    "brand": "가지마이소 AI 비서",
+    "colors": {
+      "accent": "#087f75",
+      "background": "rgba(0, 0, 0, 0)",
+      "ink": "#142d38"
+    },
+    "dataRows": 128,
+    "questionCount": 3,
+    "removedIcons": 0,
+    "scrollWidth": 1425,
+    "title": "창원 인구이동 현황을 한눈에",
+    "welcome": "무엇이 궁금한가요?",
+    "width": 1440
+  },
+  "mobile": {
+    "clientWidth": 375,
+    "heroText": "창원 인구이동 현황을 한눈에",
+    "horizontalOverflow": false,
+    "icons": 0,
+    "inputLabel": "질문하기",
+    "mainControls": [
+      {
+        "clipped": false,
+        "height": 44,
+        "label": "질문하기",
+        "width": 41.98749923706055
+      },
+      {
+        "clipped": false,
+        "height": 44,
+        "label": "데이터 관리",
+        "width": 56.17499923706055
+      },
+      {
+        "clipped": false,
+        "height": 44,
+        "label": "요약 새로고침 ↻",
+        "width": 104.1875
+      },
+      {
+        "clipped": false,
+        "height": 44,
+        "label": "＋ 새 질문",
+        "width": 313.6000061035156
+      },
+      {
+        "clipped": false,
+        "height": 50.0625,
+        "label": "최댓값과 최솟값을 살펴볼까요? ↗",
+        "width": 311.6000061035156
+      },
+      {
+        "clipped": false,
+        "height": 50.0625,
+        "label": "최근 두 기간의 평균을 비교해요 ↗",
+        "width": 311.6000061035156
+      },
+      {
+        "clipped": false,
+        "height": 44,
+        "label": "보내기↑",
+        "width": 98
+      },
+      {
+        "clipped": false,
+        "height": 44,
+        "label": "기록 추가",
+        "width": 140
+      }
+    ],
+    "questionTitle": "AI에게 질문하기",
+    "scrollWidth": 375,
+    "viewport": 390
+  },
+  "existingQuestionRestoredPC": true,
+  "existingQuestionRestoredMobile": true,
+  "exampleFilledAndShiftEnter": true,
+  "actualGPTCalls": 0,
+  "consoleErrors": [],
+  "manualConfirmationSource": "user report plus recorded PUT200/DELETE204 and read-only final state",
+  "screenshots": [
+    "pc-1440-main.jpg",
+    "pc-1440-question.jpg",
+    "mobile-390-main.jpg",
+    "mobile-390-question.jpg",
+    "mobile-390-input.jpg",
+    "mobile-390-data.jpg"
+  ],
+  "copyProofread": "새 질문입니다. 기존 질문 기록은 삭제하지 않았습니다.",
+  "finalConsoleErrors": []
+}

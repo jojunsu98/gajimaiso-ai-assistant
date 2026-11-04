@@ -1,0 +1,30 @@
+{
+  "date_kst": "2026-11-04",
+  "vercel": {
+    "url": "https://gajimaiso-ai-assistant.vercel.app/",
+    "data_count_visible": 128,
+    "period": "2016-01~2026-08",
+    "average_visible": -643.75,
+    "recent_average_visible": -558,
+    "previous_average_visible": -551.42,
+    "protected_features_retested": false,
+    "initial_loading_resolved": true,
+    "console_error_warning_entries_observed": 0,
+    "viewport_specific_validation": false
+  },
+  "render": {
+    "url": "https://gajimaiso-ai-assistant.onrender.com/docs",
+    "swagger_rendered": true,
+    "crud_chat_conversation_routes_visible": true,
+    "authorize_visible": true,
+    "write_requests_executed": 0
+  },
+  "local_url": {
+    "url": "http://127.0.0.1:5500/",
+    "result": "ERR_CONNECTION_REFUSED",
+    "server_started": false
+  },
+  "gpt_calls": 0,
+  "database_writes": 0,
+  "limitation": "Read-only availability and visible content; no new full end-to-end, authentication or responsive test."
+}

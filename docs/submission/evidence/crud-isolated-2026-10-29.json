@@ -1,0 +1,148 @@
+{
+  "run_id": "ui-final-api-20261029",
+  "started_at_utc": "2026-10-29T04:18:07.420681+00:00",
+  "verification_layer": "FastAPI TestClient + isolated real Firestore; not browser confirmation",
+  "external_ai_requests": 0,
+  "checks": [
+    {
+      "name": "isolation_before_write",
+      "ok": true,
+      "data_collection": "_frontend_data_checks_ui_final_api_20261029",
+      "conversation_collection": "_frontend_conversation_checks_ui_final_api_20261029"
+    },
+    {
+      "name": "create_2043-01",
+      "ok": true,
+      "status": 201
+    },
+    {
+      "name": "create_2043-02",
+      "ok": true,
+      "status": 201
+    },
+    {
+      "name": "initial_list_summary",
+      "ok": true,
+      "count": 2,
+      "average": -6.0
+    },
+    {
+      "name": "invalid_input_422",
+      "ok": true,
+      "status": 422,
+      "error_code": "validation_error"
+    },
+    {
+      "name": "duplicate_month_409",
+      "ok": true,
+      "status": 409,
+      "error_code": "duplicate_month"
+    },
+    {
+      "name": "update_persisted_list_summary",
+      "ok": true,
+      "status": 200,
+      "stored_value": -15,
+      "count": 2,
+      "average": -7.5
+    },
+    {
+      "name": "fake_chat_autosaved",
+      "ok": true,
+      "status": 200,
+      "model": "fake-ai-no-network"
+    },
+    {
+      "name": "fake_conversation_list_detail",
+      "ok": true,
+      "list_count": 1,
+      "detail_status": 200
+    },
+    {
+      "name": "conversation_delete_absent_list_detail404",
+      "ok": true,
+      "delete_status": 204,
+      "document_absent": true,
+      "list_count": 0,
+      "detail_status": 404,
+      "error_code": "conversation_not_found"
+    },
+    {
+      "name": "data_delete_absent_list_summary",
+      "ok": true,
+      "status": 204,
+      "document_absent": true,
+      "count": 1,
+      "average": 0.0
+    },
+    {
+      "name": "missing_data_update_delete404",
+      "ok": true,
+      "update_status": 404,
+      "delete_status": 404,
+      "error_code": "data_not_found"
+    },
+    {
+      "name": "delete_last_empty_summary",
+      "ok": true,
+      "status": 204,
+      "count": 0,
+      "average": null
+    }
+  ],
+  "ok": true,
+  "original_data_before": 128,
+  "original_conversations_before": 2,
+  "isolated_conversation_id": "cce6fc8f-dc4e-460d-8c82-dbe61d55cdfb",
+  "fake_ai_calls": 1,
+  "cleanup": {
+    "ok": true,
+    "collections": [
+      {
+        "ok": true,
+        "documents": [
+          {
+            "id": "changwon-net-2043-01",
+            "ok": true,
+            "absent": true
+          },
+          {
+            "id": "changwon-net-2043-02",
+            "ok": true,
+            "absent": true
+          }
+        ]
+      },
+      {
+        "ok": true,
+        "documents": [
+          {
+            "id": "cce6fc8f-dc4e-460d-8c82-dbe61d55cdfb",
+            "ok": true,
+            "absent": true
+          }
+        ]
+      }
+    ]
+  },
+  "data_preserved": {
+    "ok": true,
+    "before_count": 128,
+    "after_count": 128,
+    "before_sha256_including_metadata": "cb0a475784c06377a59baa6bd26680226e8d7e93160e69a4035271e70db1d994",
+    "after_sha256_including_metadata": "cb0a475784c06377a59baa6bd26680226e8d7e93160e69a4035271e70db1d994",
+    "excluded_owned_demo_ids": [],
+    "comparison": "all IDs, typed payloads, create_time and update_time"
+  },
+  "existing_conversations_preserved": {
+    "ok": true,
+    "before_count": 2,
+    "after_count": 2,
+    "before_sha256_including_metadata": "6200191907c88d8ee5c71b416bf96746aee27e31c2cca611a7b00faeb43771bb",
+    "after_sha256_including_metadata": "6200191907c88d8ee5c71b416bf96746aee27e31c2cca611a7b00faeb43771bb",
+    "excluded_owned_demo_ids": [],
+    "comparison": "all IDs, typed payloads, create_time and update_time"
+  },
+  "harness_report": ".local\\frontend-ui-final-api-20261029-report.json",
+  "finished_at_utc": "2026-10-29T04:18:23.463863+00:00"
+}

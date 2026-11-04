@@ -1,0 +1,185 @@
+{
+  "base_url": "https://gajimaiso-ai-assistant.onrender.com",
+  "started_at_utc": "2026-10-29T12:53:47.566349+00:00",
+  "mode": "live-chat",
+  "ok": true,
+  "actual_chat_http_attempts": 1,
+  "actual_ai_successes": 1,
+  "database_new_conversations_confirmed": 1,
+  "requests": [
+    {
+      "method": "GET",
+      "path": "/api/conversations",
+      "authentication": "none",
+      "status": 401,
+      "error_code": "access_denied"
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations",
+      "authentication": "invalid",
+      "status": 401,
+      "error_code": "access_denied"
+    },
+    {
+      "method": "GET",
+      "path": "/api/data",
+      "authentication": "none",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/data/summary",
+      "authentication": "none",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{id}",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{id}",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{id}",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "POST",
+      "path": "/api/chat",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{new_id}",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/data",
+      "authentication": "none",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/data/summary",
+      "authentication": "none",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{id}",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{id}",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{id}",
+      "authentication": "valid",
+      "status": 200
+    },
+    {
+      "method": "GET",
+      "path": "/api/conversations/{id}",
+      "authentication": "valid",
+      "status": 200
+    }
+  ],
+  "checks": {
+    "unauthenticated_and_wrong_token_denied": true,
+    "authenticated_conversations_read": true,
+    "firebase_data_read": true,
+    "data_count": 128,
+    "existing_conversation_count": 3,
+    "period": {
+      "start": "2016-01",
+      "end": "2026-08"
+    },
+    "read_phase_passed": true
+  },
+  "automatic_retries": 0,
+  "redirects_followed": false,
+  "inherited_checks_not_rerun": [
+    "health",
+    "docs",
+    "openapi",
+    "CORS",
+    "offline_tests"
+  ],
+  "historical_preservation": {
+    "data": {
+      "matches": true,
+      "matching_representations": [
+        "json_sorted_default_utf8"
+      ],
+      "canonical_sha256": "5879b4218543277566f16863c0ee9cc886d20252219236db0d3b30b80a89f142"
+    },
+    "conversations": {
+      "matches": true,
+      "matching_representations": [
+        "json_sorted_default_utf8"
+      ],
+      "canonical_sha256": "2965bb5e8f0cf8df5d9440d1afe3e0ceeeaf00f4d3d841d6143f386e20134680"
+    }
+  },
+  "before_evidence": "render-resume-20261029T125347566349Z-54c196ba-before.json",
+  "read_report_evidence": "render-resume-20261029T125347566349Z-54c196ba-read-report.json",
+  "attempt_marker": "render-resume-live-chat.attempt.json",
+  "upstream_ai_result": "generation_and_save_succeeded",
+  "pre_chat_report_evidence": "render-resume-20261029T125347566349Z-54c196ba-pre-chat-report.json",
+  "reply_evidence": "render-resume-20261029T125347566349Z-54c196ba-reply.json",
+  "chat": {
+    "model": "gpt-5.4-mini",
+    "usage": {
+      "input_tokens": 716,
+      "output_tokens": 160
+    },
+    "saved": true,
+    "conversation_id": "34766710-ca74-465f-b0e0-f92fbc58e8d2",
+    "full_detail_matches": true,
+    "reply_characters": 272,
+    "answer_semantics_reviewed": true,
+    "answer_semantics_review_method": "Agent compared saved reply with expected_summary; no additional AI request",
+    "listed_exactly_once": true
+  },
+  "after_evidence": "render-resume-20261029T125347566349Z-54c196ba-after.json",
+  "live_preservation": {
+    "data_128_unchanged": true,
+    "summary_unchanged": true,
+    "existing_3_listing_unchanged": true,
+    "existing_3_full_details_unchanged": true,
+    "data_before_sha256": "5879b4218543277566f16863c0ee9cc886d20252219236db0d3b30b80a89f142",
+    "data_after_sha256": "5879b4218543277566f16863c0ee9cc886d20252219236db0d3b30b80a89f142",
+    "existing_details_before_sha256": "a7efb0970daa48194f3a1734d8e789e71db90c2a275fd104065309cc167728d3",
+    "existing_details_after_sha256": "a7efb0970daa48194f3a1734d8e789e71db90c2a275fd104065309cc167728d3",
+    "ok": true
+  },
+  "finished_at_utc": "2026-10-29T12:54:15.152076+00:00"
+}
